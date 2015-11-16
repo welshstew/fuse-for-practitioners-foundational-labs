@@ -10,7 +10,7 @@
 
 == Develop the Outbound application
 
-=== CXF Rest Service
+=== Consume the message from A-MQ
 . Standard REST service, CXF-RS: Go to blueprint.xml and create a bean which is the REST service. Properties file used to specify URLs. 
 
 Alternately, Camel REST component. Use the former design to be able to formulate a proper response back to the client to indicate why the request failed.

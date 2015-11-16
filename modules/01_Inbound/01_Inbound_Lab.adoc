@@ -3,12 +3,8 @@
 
 == Inbound Use-Case Lab
 
-Business use-case is an emergency master patient index. For different heatlh-care providers to exchange patient information.
-
-Active MQ can be used to separate different aspects of the flow so as to have flexibility of hosting these different routes and also be able to scale the producers and consumers of data.
-
 .Goals
-* Build a RESTful CXF service that receives the patient record
+* Build a RESTful CXF service that receives the patient record and validates it
 * Marshal the patient object to XML using JAXB marshaller
 * Publish the XML to a queue and send an acknowledgement back to the client (Done transformer in the use case document)
 * Create a test payload to test the scenario
@@ -22,7 +18,7 @@ Active MQ can be used to separate different aspects of the flow so as to have fl
 . In the *URI* text box, copy and paste the following: 
 +
 ------
-https://github.com/gpe-mw-training/fuse_for_practitioners.git
+https://github.com/gpe-mw-training/fuse-for-practitioners-labs.git
 ------
 +
 . Switch to *Project Explorer* for the *JBoss* perspective.
@@ -43,16 +39,18 @@ Sub-folders are:
 ** `inbound` : route or service that receives the patient payload
 ** `xlate` : route that marshals the Java object to XML
 ** `outbound` : route that publishes the XML payload on a A-MQ queue
-+
 
 == Develop the Inbound application
 
-. Properties file used to specify URLs
-
 === CXF Rest Service
-. Standard REST service, CXF-RS. Can use Spring or Blueprint which starts a RESTful service with an impl. Inside the impl, you can create a producer template and call a direct endpoint in Camel. Go to blueprint.xml and create a bean which is the REST service. Inside the impl, 
+. Recommendation is to us a standard REST service CXF-RS. You can use Spring or Blueprint which starts a RESTful service with an impl. Inside the impl, you can create a producer template and call a direct endpoint in Camel. Go to blueprint.xml and create a bean which is the REST service. You will implement the add, update and search methods in the REST endpoint service.
 
-Alternately, Camel REST component. Use the former design to be able to formulate a proper response back to the client to indicate why the request failed. Also you can validate schema against the incoming payloads.
+Alternately, you can use the Camel REST component. 
+
+Use the former design to be able to formulate a proper response back to the client to indicate why the request failed. Also you can validate schema against the incoming payloads.
+
+Implement a Java class that is the REST endpoint. The class creates a producer template and calls the direct route. The direct route puts the message on A-MQ and returns, allowing you to return an 'OK' status to the client in the Java class.
+
 
 === Marshal the Java object to XML
 
@@ -60,11 +58,11 @@ Under the artifacts folder, the REST schema is provided. Use the schema to creat
 
 === Publish the XML on A-MQ queue
 
+The benefit of sending an XML Message is traceability. For that reason, convert to XML before dropping it on the queue. In the next part of the exercise, you will need to unmarshal the XML received on the queue to an object for mapping purposes.
+
 === Develop the JUnit Tests
 
 Develop a feature and a fabric profile. Test using SOAPUI or curl. 
-
-Message traceability using XML. For that reason, convert to XML before dropping it on the queue. In the next part of the exercise, you will need to unmarshal to object for mapping.
 
 === Build the `Inbound` Project
 . On the command line, run the following commands:
@@ -72,4 +70,3 @@ Message traceability using XML. For that reason, convert to XML before dropping 
 * mvn camel:run
 
 
-* You should see log statements similar to the following in the console of your JBoss Developer Studio:

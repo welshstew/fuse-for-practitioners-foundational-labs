@@ -10,27 +10,19 @@
 
 == Develop the Xlate application
 
-=== CXF Rest Service
-. Standard REST service, CXF-RS: Go to blueprint.xml and create a bean which is the REST service. Properties file used to specify URLs. 
+=== Consume the message from A-MQ
 
-Alternately, Camel REST component. Use the former design to be able to formulate a proper response back to the client to indicate why the request failed.
+=== Unmarshal the XML to a Java object
 
-=== Marshal the Java object to XML
+=== Typeconvert to a class that matches ExecuteMatchUpdate
 
-Input is the schema. Use the schema to create a set of JAXB objects that allow you to do the mapping.
+=== Marshal to XML
 
-=== Publish the XML on A-MQ queue
+=== Publish to A-MQ
 
-=== Develop the JUnit Tests
-
-Develop a feature and a fabric profile. Test using SOAPUI or curl. 
-
-Message traceability using XML. For that reason, convert to XML before dropping it on the queue. In the next part of the exercise, you will need to unmarshal to object for mapping.
-
-=== Build the `Inbound` Project
+=== Build the `Xlate` Project
 . On the command line, run the following commands:
 * mvn clean install
 * mvn camel:run
 
 
-* You should see log statements similar to the following in the console of your JBoss Developer Studio:
