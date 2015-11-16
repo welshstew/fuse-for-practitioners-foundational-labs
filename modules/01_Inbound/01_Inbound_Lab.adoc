@@ -1,0 +1,75 @@
+:scrollbar:
+:data-uri:
+
+== Inbound Use-Case Lab
+
+Business use-case is an emergency master patient index. For different heatlh-care providers to exchange patient information.
+
+Active MQ can be used to separate different aspects of the flow so as to have flexibility of hosting these different routes and also be able to scale the producers and consumers of data.
+
+.Goals
+* Build a RESTful CXF service that receives the patient record
+* Marshal the patient object to XML using JAXB marshaller
+* Publish the XML to a queue and send an acknowledgement back to the client (Done transformer in the use case document)
+* Create a test payload to test the scenario
+
+:numbered:
+
+== Import the Lab Project
+
+. In JBoss Developer Studio, switch to the *Git* perspective. 
+. Click the icon at the top to clone a Git repository and add the clone to this view.
+. In the *URI* text box, copy and paste the following: 
++
+------
+https://github.com/gpe-mw-training/fuse_for_practitioners.git
+------
++
+. Switch to *Project Explorer* for the *JBoss* perspective.
+. Import a new Maven project by selecting *File -> Import -> Maven -> Existing Maven Projects -> Next*. Import the `core` and it's parent project
+. Navigate to the location of the Git projects for the Data Transformation tool and click *Finish*.
+. Click the *Project Explorer* tab and expand the `Inbound` project node. 
++  
+.Application structure
+image::images/application_structure.png[width="40%"]
+
+. Examine the following files and folders that appear in the expanded view:
+
+* `core`: Area in which you will develop the 3 parts of the use-case. 
++
+Sub-folders are:
++
+** `artifacts` : WSDL and XSD files you work from
+** `inbound` : route or service that receives the patient payload
+** `xlate` : route that marshals the Java object to XML
+** `outbound` : route that publishes the XML payload on a A-MQ queue
++
+
+== Develop the Inbound application
+
+. Properties file used to specify URLs
+
+=== CXF Rest Service
+. Standard REST service, CXF-RS. Can use Spring or Blueprint which starts a RESTful service with an impl. Inside the impl, you can create a producer template and call a direct endpoint in Camel. Go to blueprint.xml and create a bean which is the REST service. Inside the impl, 
+
+Alternately, Camel REST component. Use the former design to be able to formulate a proper response back to the client to indicate why the request failed. Also you can validate schema against the incoming payloads.
+
+=== Marshal the Java object to XML
+
+Under the artifacts folder, the REST schema is provided. Use the schema to create a set of JAXB objects that allow you to do the mapping.
+
+=== Publish the XML on A-MQ queue
+
+=== Develop the JUnit Tests
+
+Develop a feature and a fabric profile. Test using SOAPUI or curl. 
+
+Message traceability using XML. For that reason, convert to XML before dropping it on the queue. In the next part of the exercise, you will need to unmarshal to object for mapping.
+
+=== Build the `Inbound` Project
+. On the command line, run the following commands:
+* mvn clean install
+* mvn camel:run
+
+
+* You should see log statements similar to the following in the console of your JBoss Developer Studio:
