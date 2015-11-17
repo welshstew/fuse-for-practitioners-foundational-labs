@@ -4,35 +4,29 @@
 == Outbound Use-Case Lab
 
 .Goals
-* Publish the XML to a queue and send an acknowledgement back to the client (Done transformer in the use case document). The Nextgate web-service will be provided for testing. You will invoke ExecuteMatchUpdate against the server.
+* Receive the ExecuteMatchUpdate class from A-MQ. Nextgate web-service will be provided for testing. You will invoke ExecuteMatchUpdate against the server. Respond back to the client using the Done transformer
 
 :numbered:
 
 == Develop the Outbound application
 
 === Consume the message from A-MQ
-. Standard REST service, CXF-RS: Go to blueprint.xml and create a bean which is the REST service. Properties file used to specify URLs. 
-
-Alternately, Camel REST component. Use the former design to be able to formulate a proper response back to the client to indicate why the request failed.
+* Consumes the ExecuteMatchUpdate XML from an ActiveMQ Queue (q.empi.nextgate.out) 
 
 === Marshal the Java object to XML
-
-Use the schema to create a set of JAXB objects that allow you to do the mapping.
+* Converts the ExecuteMatchUpdate XML to a ExecuteMatchUpdate Object
 
 === Invoke the Nextgate web service
 
-Input is the WSDL for the webservice. 
+* Use the ExecuteMatchUpdate Object to build the Nextgate WebService Request (sent to WebService) 
+* Dispatches the request to the Nextgate Service URI - CXF_WS_ENDPOINT_URI Input is the WSDL for the webservice. 
 
 === Develop the JUnit Tests
 
 Develop a feature and a fabric profile. Test using SOAPUI or curl. 
-
-Message traceability using XML. For that reason, convert to XML before dropping it on the queue. In the next part of the exercise, you will need to unmarshal to object for mapping.
 
 === Build the `Outbound` Project
 . On the command line, run the following commands:
 * mvn clean install
 * mvn camel:run
 
-
-* You should see log statements similar to the following in the console of your JBoss Developer Studio:

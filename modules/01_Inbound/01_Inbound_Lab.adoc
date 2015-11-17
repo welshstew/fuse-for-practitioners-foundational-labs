@@ -54,11 +54,11 @@ Implement a Java class that is the REST endpoint. The class creates a producer t
 
 === Marshal the Java object to XML
 
-Under the artifacts folder, the REST schema is provided. Use the schema to create a set of JAXB objects that allow you to do the mapping.
+Using the JAXB marshaller, convert the payload to XML
 
 === Publish the XML on A-MQ queue
 
-The benefit of sending an XML Message is traceability. For that reason, convert to XML before dropping it on the queue. In the next part of the exercise, you will need to unmarshal the XML received on the queue to an object for mapping purposes.
+Once the message is successfully published, a 'Done' XML string is sent back to the client.
 
 === Develop the JUnit Tests
 

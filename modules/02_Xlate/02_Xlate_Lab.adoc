@@ -4,21 +4,26 @@
 == Xlate Use-Case Lab
 
 .Goals
-* Marshal the patient object to XML using JAXB marshaller
+Receive the Person object on A-MQ and publish the ExecuteMatchUpdate XML on A-MQ
 
 :numbered:
 
 == Develop the Xlate application
 
 === Consume the message from A-MQ
+* Consumes the Person XML from an ActiveMQ Queue (q.empi.deim.in)
 
 === Unmarshal the XML to a Java object
+* Converts the Person XML to a Person Object 
 
 === Typeconvert to a class that matches ExecuteMatchUpdate
+* Converts the Person Object to an ExecuteMatchUpdate Object
 
 === Marshal to XML
+* Converts the ExecuteMatchUpdate Object to ExecuteMatchUpdate XML
 
 === Publish to A-MQ
+* Dispatches the ExecuteMatchUpdate  XML to an ActiveMQ Queue (q.empi.nextgate.out)
 
 === Build the `Xlate` Project
 . On the command line, run the following commands:
