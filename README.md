@@ -1,4 +1,8 @@
-# fuse_for_practitioners
+# Fuse For Practitioners
+
+## ID : Use Case 1
+## Name : Camel Routes with HL7 DataFormat & A-MQ
+## Description : 
 
 The business use-case is an emergency master patient index for different heatlh-care providers to exchange patient information.
 
@@ -9,4 +13,7 @@ Active MQ can be used to separate different aspects of this flow so as to have f
 Another design pattern followed is the use of the properties file to encode URLs and other connection information as opposed to hard-coding.
 
 Message traceability is managed by using XML. For that reason, convert to XML before dropping it on the queue.
+
+## Time estimated : ?
+## How to evaluate the solution of the student : ?
 
