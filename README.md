@@ -88,5 +88,12 @@ Develop a simple BAM solution using a Camel interceptor to save the business inf
 Create a json dashboard (http://www.hawkular.org/) displaying the status of the camel routes, endpoints, ... using the jolokia servlet
 ********************************************************************************************************
 
+## ID : Use Case 13
+## Description
+TBD. Fabric based endpoint indirection for Camel routes & Fabric Discovery URL based brokers (optional).
+********************************************************************************************************
+
+# Remark
+
 At the beginning of each day, a short presentation of the use cases/problems to resolve (= to be developed) will be presented. Next, the students will start to work on their project. They will submit to the teacher the solution to be evaluated. A git repository will be created for the purposes of the bootcamp with a branch / user. Ideally, the evaluation results should be next discussed/challenged with the  Enterprise Integration Practice Leader to determine the next steps.
 
