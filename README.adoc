@@ -4,14 +4,19 @@
 :toc-title: Table of Content
 :numbered:
 
-== Fuse For Practitioners
+= Fuse For Practitioners
 
+toc::[]
+
+== Introduction
+
+The goal of this project is to provide use cases / problems to be rolved by the students, practitioner during a lab session.
 
 At the beginning of each day, a short presentation of the use cases/problems to resolve (= to be developed) will be presented. Next, the students will start to work on their project. They will submit to the teacher the solution to be evaluated.
 A git repository will be created for the purposes of the bootcamp with a branch / user. Ideally, the evaluation results should be next discussed/challenged with the  Enterprise Integration Practice Leader to determine the next steps.
 
 
-=== Use Case 0
+== Use Case 0
 
 * Name :  xxxxCamel Routes with HL7 DataFormat & A-MQ
 * Description
@@ -29,7 +34,7 @@ Message traceability is managed by using XML. For that reason, convert to XML be
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
 
-=== Use Case 1
+== Use Case 1
 
 * Name :  xxxx
 * Description
@@ -41,7 +46,7 @@ The project to be developed must contain the unit tests to test the data transfo
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
 
-=== Use Case 2
+== Use Case 2
 
 * Name :
 * Description
@@ -52,7 +57,7 @@ Aggregate the responses received and publish the result into a H2 DB using the S
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
 
-=== Use Case 3
+== Use Case 3
 
 * Name :
 * Description
@@ -63,7 +68,7 @@ Develop a strategy to update/correct the erroneous messages and re inject these 
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
 
-=== Use Case 4
+== Use Case 4
 
 * Name :
 * Description
@@ -74,7 +79,7 @@ Based on the previous used case, you will now secure the A-MQBroker using the JA
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
 
-=== Use Case 5
+== Use Case 5
 
 * Name :
 * Description
@@ -85,7 +90,7 @@ The camel routes could be deployed into different JBoss Fuse containers or local
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
 
-=== Use Case 6
+== Use Case 6
 
 * Name :
 * Description
@@ -96,7 +101,7 @@ In case of timeout or no response received, return a json message with an error 
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
 
-=== Use Case 7
+== Use Case 7
 
 * Name :
 * Description
@@ -108,7 +113,7 @@ Externalize the Camel endpoints properties using OSGI Config Admin & Properties 
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
 
-=== Use Case 8
+== Use Case 8
 
 * Name :
 * Description
@@ -119,7 +124,7 @@ Package the project of the use case 7 using a features XML file and deploy it on
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
 
-=== Use Case 9
+== Use Case 9
 
 * Name :
 * Description
@@ -131,7 +136,7 @@ Repackage your project of the use case 2 to be deployed using some profiles on J
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
 
-=== Use Case 10
+== Use Case 10
 
 * Name :
 * Description
@@ -142,7 +147,7 @@ Develop a Camel route able to query the Elasticsearch server to fetch the info s
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
 
-=== Use Case 11
+== Use Case 11
 
 * Name :
 * Description
@@ -152,7 +157,7 @@ Develop a simple BAM solution using a Camel interceptor to save the business inf
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
 
-=== Use Case 12
+== Use Case 12
 
 * Name :
 * Description
@@ -162,7 +167,7 @@ Create a json dashboard (http://www.hawkular.org/) displaying the status of the 
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
 
-=== Use Case 13
+== Use Case 13
 
 * Name :
 * Description
