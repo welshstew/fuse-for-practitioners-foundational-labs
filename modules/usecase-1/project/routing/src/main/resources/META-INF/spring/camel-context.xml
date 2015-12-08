@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:osgi="http://www.springframework.org/schema/osgi"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/osgi
+       http://www.springframework.org/schema/osgi/spring-osgi.xsd
+       http://camel.apache.org/schema/spring
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <bean id="aggregateAccounts" class="org.example.AccountAggregator" />
+
+    <camelContext trace="false" xmlns="http://camel.apache.org/schema/spring">
+
+        <!--
+             Transformation Endpoint doing csv2java conversion
+             Step 1 : csv record is converted java using camel bindy
+             Step 2 : Dozer transformation of Customer to Account
+             Step 3 : Java to Json conversion using json jackson
+        -->
+        <endpoint uri="dozer:csv2json?sourceModel=org.acme.Customer&amp;targetModel=org.globex.Account&amp;marshalId=json&amp;unmarshalId=csv&amp;mappingFile=transformation.xml" id="csv2json" />
+
+        <!-- Input & OutPut DataFormat -->
+        <dataFormats>
+            <bindy id="csv" type="Csv" classType="org.acme.Customer" />
+            <json id="json" library="Jackson"/>
+        </dataFormats>
+
+        <route>
+            <!-- Consume files from input directory -->
+            <from uri="file:src/data/inbox?fileName=customers.csv&amp;noop=true" />
+            <onException>
+                <exception>java.lang.IllegalArgumentException</exception>
+                <handled>
+                    <constant>true</constant>
+                </handled>
+                <to uri="file:src/data/error?fileName=csv-record-${date:now:yyyyMMdd}.txt"/>
+            </onException>
+            <split>
+                <tokenize token="\n" />
+                <to ref="csv2json"/>
+                <to uri="file:src/data/outbox?fileName=account-${property.CamelSplitIndex}.json" />
+            </split>
+        </route>
+    </camelContext>
+</beans>
