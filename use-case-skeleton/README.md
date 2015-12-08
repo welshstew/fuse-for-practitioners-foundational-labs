@@ -17,4 +17,5 @@ When the archetype has been compiled and deployed within your maven local repo, 
 mvn archetype:generate -DarchetypeGroupId=org.fuse.archetypes -DarchetypeArtifactId=usecase-archetype -DarchetypeVersion=1.0 -DgroupId=org.fuse.usecase -DartifactId=project -Dversion=1.0
 ```
 
-- Go to `project` directory and run a `mvn clean install` to test it.
+- Go to the `project` directory and run a `mvn clean install` to test it.
+- Develop your use case !
