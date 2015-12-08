@@ -28,6 +28,11 @@
             *
         </osgi-import-package>
         <osgi-dynamic-package></osgi-dynamic-package>
+
+        <fabric8.profile>fuse-usecase</fabric8.profile>
+        <fabric8.parentProfiles>feature-camel</fabric8.parentProfiles>
+        <fabric8.features/>
+        <fabric8.bundles/>
     </properties>
 
     <dependencies>
@@ -59,6 +64,13 @@
                 <configuration>
                     <applicationContextUri>META-INF/spring/camel-context.xml</applicationContextUri>
                 </configuration>
+            </plugin>
+
+            <!-- Fabric8 Plugin -->
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>fabric8-maven-plugin</artifactId>
+                <version>${fabric8.version}</version>
             </plugin>
         </plugins>
     </build>

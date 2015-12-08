@@ -23,6 +23,7 @@
         <maven-resources-plugin.version>2.5</maven-resources-plugin.version>
         <maven-install-plugin.version>2.3.1</maven-install-plugin.version>
         <felix-maven-plugin.version>2.3.7</felix-maven-plugin.version>
+        <fabric8-plugin.version>1.2.0.redhat-621083</fabric8-plugin.version>
 
         <!-- OSGI packages -->
         <osgi-import-package>*</osgi-import-package>
@@ -54,6 +55,12 @@
                     <artifactId>camel-maven-plugin</artifactId>
                     <version>${camel.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>${felix-maven-plugin.version}</version>
+                </plugin>
+
             </plugins>
         </pluginManagement>
 
