@@ -13,7 +13,7 @@ A git repository will be created for the purposes of the bootcamp with a branch 
 
 === Use Case 0
 
-* Name : Camel Routes with HL7 DataFormat & A-MQ
+* Name :  xxxxCamel Routes with HL7 DataFormat & A-MQ
 * Description
 
 The business use-case is an emergency master patient index for different heatlh-care providers to exchange patient information.
@@ -31,7 +31,7 @@ Message traceability is managed by using XML. For that reason, convert to XML be
 
 === Use Case 1
 
-* Name :
+* Name :  xxxx
 * Description
 
 Process CSV files, data transform the records to Java Objects, Split the content, enhance the content (using the Data Mapper tool) and convert the objects to JSON file to be saved into individual files.
