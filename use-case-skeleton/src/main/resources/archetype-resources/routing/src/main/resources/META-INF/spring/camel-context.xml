@@ -12,5 +12,9 @@
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
     <camelContext trace="false" xmlns="http://camel.apache.org/schema/spring">
+        <route id="timer-to-log">
+            <from uri="timer://dummy"/>
+            <log message="This is a cool use case"/>
+        </route>
     </camelContext>
 </beans>

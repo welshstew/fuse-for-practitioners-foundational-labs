@@ -30,19 +30,37 @@
         <osgi-dynamic-package></osgi-dynamic-package>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-spring</artifactId>
+        </dependency>
+        <!-- logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <!-- Camel plugin -->
             <plugin>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-maven-plugin</artifactId>
-                <version>${camel.version}</version>
                 <configuration>
                     <applicationContextUri>META-INF/spring/camel-context.xml</applicationContextUri>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 
 </project>

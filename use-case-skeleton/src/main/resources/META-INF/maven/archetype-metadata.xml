@@ -69,6 +69,7 @@
                         <include>**/*.wsdl</include>
                         <include>**/*.jaxb</include>
                         <include>**/*.cfg</include>
+                        <include>**/*.properties</include>
                     </includes>
                 </fileSet>
                 <fileSet filtered="true" packaged="false" encoding="UTF-8">
