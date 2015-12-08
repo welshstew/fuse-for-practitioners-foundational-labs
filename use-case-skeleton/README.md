@@ -9,11 +9,10 @@ You can download project from Git and build it using this maven command `mvn ins
 
 ## How to use it
 
-When the arhcetype has been compiled and deployed within your maven local repo, you can use as such
+When the archetype has been compiled and deployed within your maven local repo, you can use as such
 
 - Execute the following command in a shell environment
 
-    mvn archetype:generate -DarchetypeGroupId=org.fuse.archetypes -DarchetypeArtifactId=usecase-archetype -DarchetypeVersion=1.0 -DgroupId=org.fuse.case -DartifactId=project -Dversion=1.0
+    mvn archetype:generate -DarchetypeGroupId=org.fuse.archetypes -DarchetypeArtifactId=usecase-archetype -DarchetypeVersion=1.0 -DgroupId=org.fuse.usecase -DartifactId=project -Dversion=1.0
 
-- Go to poc directory and run a mvn clean install.
-- After that you can launch Camel in standalone mode or deploy it in Fuse ESB (more info in README file of the project created)
+- Go to `project` directory and run a `mvn clean install` to test it.
