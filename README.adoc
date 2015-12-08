@@ -41,9 +41,13 @@ Message traceability is managed by using XML. For that reason, convert to XML be
 
 * Description
 
-Process CSV files, data transform the records to Java Objects, Split the content, enhance the content (using the Data Mapper tool) and convert the objects to JSON file to be saved into individual files.
+The purpose of the use case is to develop some Apache Camel pipeline routes where we will process CSV files, read the CSV records and transform the records to Java Objects.
+Next, we will split the List of the Java Objects to enhance each Java Object using the JBoss Fuse Data Mapper tool. The java object enhanced will be finally transformed into a JSON String that you will
+save into a file.
+
 The DLQ pattern must be implemented to move the "erroneous" CSV records into an error folder (using Exception Strategy and DLQErrorHandler).
-The project to be developed must contain the unit tests to test the data transformations of the message
+
+The project to be developed must contain the unit tests to test the data transformations of the message.
 
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
@@ -63,7 +67,7 @@ Aggregate the responses received and publish the result into a H2 DB using the S
 * Description
 
 Extend the use case 1 to publish the JSON messages into a queue instead of a folder. Replace the DLQ folder with a DLQ queue.
-Develop a strategy to update/correct the erroneous messages and re inject these messages into the normal flow
+Develop a strategy to update/correct the erroneous messages and re inject these messages into the normal flow.
 
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
