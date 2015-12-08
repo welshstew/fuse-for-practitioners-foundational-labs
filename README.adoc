@@ -10,11 +10,15 @@ toc::[]
 
 == Introduction
 
-The goal of this project is to provide use cases / problems to be rolved by the students, practitioner during a lab session.
+The goal of this project is to provide use cases / problems to be resolved by the students, practitioners during a lab session. This page lists the uses cases available and provides for each use case
+
+- a description of the problem to be resolved,
+- the technologies involved,
+- the time estimated to design the solution and
+- the criteria to be used to evaluate the students
 
 At the beginning of each day, a short presentation of the use cases/problems to resolve (= to be developed) will be presented. Next, the students will start to work on their project. They will submit to the teacher the solution to be evaluated.
 A git repository will be created for the purposes of the bootcamp with a branch / user. Ideally, the evaluation results should be next discussed/challenged with the  Enterprise Integration Practice Leader to determine the next steps.
-
 
 == Use Case 0 : Camel Routes with HL7 DataFormat & A-MQ
 
