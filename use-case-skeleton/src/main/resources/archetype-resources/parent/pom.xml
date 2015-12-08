@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>${groupId}</groupId>
+    <artifactId>parent</artifactId>
+    <version>${version}</version>
+    <name>Fuse :: Use Case :: Parent</name>
+    <packaging>pom</packaging>
+
+    <properties>
+        <!-- Apache Maven plugins -->
+        <build-helper-maven-plugin.version>1.5</build-helper-maven-plugin.version>
+        <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
+        <maven-resources-plugin.version>2.5</maven-resources-plugin.version>
+        <maven-install-plugin.version>2.3.1</maven-install-plugin.version>
+        <felix-maven-plugin.version>2.3.7</felix-maven-plugin.version>
+
+        <!-- JBoss Fuse 6.2.1 - TODO to be updated -->
+        <activemq.version>5.8.0.redhat-60024</activemq.version>
+        <camel.version>2.10.0.redhat-60024</camel.version>
+        <cxf.version>2.6.0.redhat-60024</cxf.version>
+        <karaf.version>2.3.0.redhat-60024</karaf.version>
+
+        <!-- Others -->
+
+        <!-- OSGI packages -->
+        <osgi-import-package>*</osgi-import-package>
+        <osgi-export-package></osgi-export-package>
+        <osgi-private-package></osgi-private-package>
+        <osgi-dynamic-package></osgi-dynamic-package>
+    </properties>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>${felix-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Import-Package>
+                            ${osgi-import-package}
+                        </Import-Package>
+                        <Private-Package>
+                            ${osgi-private-package}
+                        </Private-Package>
+                        <Export-Package>
+                            ${osgi-export-package}
+                        </Export-Package>
+                        <DynamicImport-Package>
+                            ${osgi-dynamic-package}
+                        </DynamicImport-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
