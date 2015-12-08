@@ -11,7 +11,7 @@ toc::[]
 == Pre-Requisites
 
 - JDK 8
-- Apache Maven 3.2.3
+- Apache Maven >= 3.2.5
 - JBDS 8 or 9 + Fuse Tooling ?
 - JBoss Fuse 6.2.1
 
