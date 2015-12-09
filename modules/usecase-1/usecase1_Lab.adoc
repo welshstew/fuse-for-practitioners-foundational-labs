@@ -16,7 +16,7 @@ The DLQ pattern must be implemented to move the "erroneous" CSV records into an 
 
 :numbered:
 
-== Import the Project
+== Import the Project (TODO - Discuss how we will setup the project)
 
 . In JBoss Developer Studio, switch to the *Git* perspective. 
 . Click the icon at the top to clone a Git repository and add the clone to this view.
@@ -41,33 +41,50 @@ image::images/application_structure.png[width="40%"]
 * `parent` : Contain JBoss Fuse 6.2.1 dependencies, properties definition and maven plugins used by the modules
 * `features` : Apache Karaf XML features file to be used to deploy the `usecase` project on JBoss Fuse without Fabric technology
 
-== Develop the Inbound application
+=== Create the Model class
 
-=== CXF Rest Service
-. Recommendation is to us a standard REST service CXF-RS. You can use Spring or Blueprint which starts a RESTful service with an impl. Inside the impl, you can create a producer template and call a direct endpoint in Camel. Go to blueprint.xml and create a bean which is the REST service. You will implement the add, update and search methods in the REST endpoint service.
+Use the `src/main/resources/schema/csv/customer.csv` file containing the definition of a CSV record to create the Java class `org.acme.Customer`. The csv fields must be associated
+to Java fields based on the type defined within the csv schema. The position of the field corresponds also to the position of the csv column within the csv record. Specify to Bindy
+that the separator to be used is `,`.
 
-Alternately, you can use the Camel REST component. 
+The camel-bindy component is required to compile the code
 
-Use the former design to be able to formulate a proper response back to the client to indicate why the request failed. Also you can validate schema against the incoming payloads.
+=== Develop the Routing module
 
-Implement a Java class that is the REST endpoint. The class creates a producer template and calls the direct route. The direct route puts the message on A-MQ and returns, allowing you to return an 'OK' status to the client in the Java class.
+Develop the Apache Camel route consuming the CSV records files and split the content using as token the carriage return character. For each exchange created call the endpoint of dozer doing
+the csv2json data transformation
+
+File uri inbox endpoint : src/data/inbox?fileName=customers.csv&amp;noop=true
+File uri outbox endpoint : src/data/outbox?fileName=csv-record-${date:now:yyyyMMdd}.txt
+File uri error endpoint : src/data/error?fileName=account-${property.CamelSplitIndex}.json
+
+=== Define the csv2json data transformation
+
+Use the JBoss Fuse Data Transformation Mapper tool to create, using the wizard, a csv2json transformation. Use as input format the Customer Java class created previously and select the
+target model using the `acount.json` file located under the directory `src/main/resources/schema/json/account.json`. When the datatransformation file has been created, then edit
+the file to map the Customer fields with their corresponding fields created within the Account, Company and Contact classes.
+
+Remark : By default, the tool will generate the classes under the package name `account`. You can rename the package to use as package name `org.globex`. If you change the package name, then
+it will be required that you also edit the transformation file the change the location of the classB like also the targetModel field within the endpoint added within the Apache Camel Route
 
 
-=== Marshal the Java object to XML
+=== Develop the JUnit Test
 
-Using the JAXB marshaller, convert the payload to XML
+Develop a Junit Test case to validate the csv2json data transformation. Add a new Apache Camel route to produce using the direct component an exchange containing as Body
+a customer csv record and send this exchange to the endpoint responsible to do the thransfoamtion ("csv2json"). the result of that transformation must be consumed by a mock endpoint
 
-=== Publish the XML on A-MQ queue
+Name of the Junit Test class : ValidateTransformationTest
+Mock endpoint uri : mock:csv2json-test-output
+Direct endpoint uri : direct:csv2json-test-input
 
-Once the message is successfully published, a 'Done' XML string is sent back to the client.
+=== Build the `routing` Project & test it locally
 
-=== Develop the JUnit Tests
-
-Develop a feature and a fabric profile. Test using SOAPUI or curl. 
-
-=== Build the `Inbound` Project
 . On the command line, run the following commands:
-* mvn clean install
-* mvn camel:run
+
+[source]
+----
+mvn clean install
+mvn camel:run
+----
 
 
