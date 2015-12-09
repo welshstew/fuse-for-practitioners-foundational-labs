@@ -62,11 +62,11 @@ File uri outbox endpoint : src/data/outbox?fileName=csv-record-${date:now:yyyyMM
 Within the Fuse Camel editor, drag and drop a "Data Transformation" endpoint to create, using the wizard, a csv2json transformation. Use as input format the Customer Java class created previously and select the
 target model using the `acount.json` file located under the directory `src/main/resources/schema/json/account.json`.
 
-images::images/csv2json.png[]
+image::images/csv2json.png[]
 
 When the data transformation file has been created, then edit the file to map the Customer fields with their corresponding fields created within the Account, Company and Contact classes.
 
-images::images/csv2json-mapping.png[]
+image::images/csv2json-mapping.png[]
 
 Remark : By default, the tool will generate the classes under the package name `account` for the json model. You can rename the package to by example `org.globex` instead of the `account` name. If you change the package name, then
 it will be required that you also edit the transformation file the change the location of the classB (= target model) like also the targetModel field within the endpoint added within the Apache Camel Route.
