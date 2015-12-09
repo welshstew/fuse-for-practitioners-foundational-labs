@@ -36,14 +36,10 @@ image::images/application_structure.png[width="40%"]
 
 . Examine the following files and folders that appear in the expanded view:
 
-* `core`: Area in which you will develop the 3 parts of the use-case. 
-+
-Sub-folders are:
-+
-** `artifacts` : WSDL and XSD files you work from
-** `inbound` : route or service that receives the patient payload
-** `xlate` : route that marshals the Java object to XML
-** `outbound` : route that publishes the XML payload on a A-MQ queue
+* `routing`: module in which you will develop the `route`, `unit test` of the use-case.
+** `src/main/resources/schema` : JSON and csv schemas files you will need to create the Data Transformation
+* `parent` : Contain JBoss Fuse 6.2.1 dependencies, properties definition and maven plugins used by the modules
+* `features` : Apache Karaf XML features file to be used to deploy the `usecase` project on JBoss Fuse without Fabric technology
 
 == Develop the Inbound application
 
