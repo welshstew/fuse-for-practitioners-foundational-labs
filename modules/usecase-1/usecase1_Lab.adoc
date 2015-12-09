@@ -69,9 +69,9 @@ When the data transformation file has been created, then edit the file to map th
 image::images/csv2json-mapping.png[]
 
 NOTE: By default, the tool will generate the classes under the package name `account` for the json model. You can rename the package to by example `org.globex` instead of the `account` name. If you change the package name, then
-it will be required that you also edit the transformation file the change the location of the classB (= target model) like also the targetModel field within the endpoint added within the Apache Camel Route.
+it will be required that you also edit the transformation file to change the location of the classB (= target model) like also the targetModel field within the endpoint added within the Apache Camel Route.
 
-As the csv input source is not available as source when you generate the data mapping, then the Bindy dataformat has not been added within the <DataFormats> xml tag of the Apachz Camel
+WARNING: As the csv input source is not available as source when you generate the data mapping, then the Bindy dataformat has not been added within the <DataFormats> xml tag of the Apachz Camel
 route. So edit the code source of the Apache Camel route to add the <bindy /> xml tag with the following paramaters : id = csv, type = csv and classType="org.acme.Customer"
 Update also the endpoint definition to use this csv data format to unmarshall the content. So, add a unmarshalId parameter.
 
