@@ -12,10 +12,10 @@
 
     <properties>
         <!-- Version of JBoss Fuse used for the use case -->
-        <jboss.fuse.bom.version>6.2.1.redhat-073</jboss.fuse.bom.version>
+        <jboss.fuse.bom.version>6.2.1.redhat-084</jboss.fuse.bom.version>
 
         <!-- Versions should be the same as defined within the Fuse BOM -->
-        <camel.version>2.15.1.redhat-621073</camel.version>
+        <camel.version>2.15.1.redhat-621084</camel.version>
 
         <!-- Apache Maven plugins -->
         <build-helper-maven-plugin.version>1.5</build-helper-maven-plugin.version>
@@ -23,7 +23,7 @@
         <maven-resources-plugin.version>2.5</maven-resources-plugin.version>
         <maven-install-plugin.version>2.3.1</maven-install-plugin.version>
         <felix-maven-plugin.version>2.3.7</felix-maven-plugin.version>
-        <fabric8-plugin.version>1.2.0.redhat-621073</fabric8-plugin.version>
+        <fabric8-plugin.version>1.2.0.redhat-621084</fabric8-plugin.version>
 
         <!-- OSGI Properties required for the Apache Felix Plugin -->
         <osgi-import-package>*</osgi-import-package>
