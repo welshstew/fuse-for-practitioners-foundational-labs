@@ -4,14 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>project</artifactId>
-        <groupId>org.fuse.usecase1</groupId>
+        <groupId>org.fuse.usecase2</groupId>
         <version>1.0</version>
     </parent>
 
-    <groupId>org.fuse.usecase1</groupId>
     <artifactId>parent</artifactId>
     <version>1.0</version>
-    <name>Fuse :: Use Case 1 :: Parent</name>
+    <name>Fuse :: Use Case 2 :: Parent</name>
     <packaging>pom</packaging>
 
     <properties>
@@ -64,6 +63,22 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-cxf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-dozer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-sql</artifactId>
         </dependency>
         <!-- logging -->
         <dependency>
@@ -160,6 +175,10 @@
             <id>Maven Central</id>
             <url>http://repo1.maven.org/maven2/</url>
         </repository>
+        <repository>
+            <id>Tech Preview</id>
+            <url>https://maven.repository.redhat.com/techpreview/all/</url>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
@@ -181,7 +200,9 @@
             <id>jboss-fuse-ea</id>
             <url>http://repository.jboss.org/nexus/content/groups/ea</url>
         </pluginRepository>
+        <pluginRepository>
+            <id>Tech Preview</id>
+            <url>https://maven.repository.redhat.com/techpreview/all/</url>
+        </pluginRepository>
     </pluginRepositories>
-
-
 </project>
