@@ -84,10 +84,12 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-test-spring3</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
