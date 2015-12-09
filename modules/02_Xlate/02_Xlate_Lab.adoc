@@ -17,7 +17,10 @@ Receive the Person object on A-MQ and publish the ExecuteMatchUpdate XML on A-MQ
 * Converts the Person XML to a Person Object 
 
 === Typeconvert to a class that matches ExecuteMatchUpdate
-* Converts the Person Object to an ExecuteMatchUpdate Object
+* Converts the Person Object to an ExecuteMatchUpdate Object, which is the operation on the web service. To accomplish this, you have to write your own TypeConverter with the convertTo method implemented. The parameters to this method are as follows:
+- Type is the type of the object you want to convert to
+- the Exchange is passed in and executing a getIn() or getBody() will return a Person object that can be copied into the Object. 
+- Object: object you want to convert to. 
 
 === Marshal to XML
 * Converts the ExecuteMatchUpdate Object to ExecuteMatchUpdate XML
