@@ -28,8 +28,11 @@
         <felix-maven-plugin.version>2.3.7</felix-maven-plugin.version>
         <fabric8-plugin.version>1.2.0.redhat-621083</fabric8-plugin.version>
 
-        <!-- OSGI packages -->
+        <!-- OSGI Properties required for the Apache Felix Plugin -->
         <osgi-import-package>*</osgi-import-package>
+        <osgi-export-package/>
+        <osgi-private-package/>
+        <osgi-dynamic-package/>
     </properties>
 
     <dependencyManagement>

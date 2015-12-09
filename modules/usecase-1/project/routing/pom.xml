@@ -19,7 +19,7 @@
             org.fuses.usecase.routing;version="1.0"
         </osgi-private-package>
         <osgi-import-package>
-            !org.fuses.usecase.rounting;version="1.0",
+            !org.fuses.usecase.routing;version="1.0",
             org.apache.camel;version="[2.0,3.0)",
             org.apache.camel.builder;version="[2.0,3.0)",
             org.apache.camel.model;version="[2.0,3.0)",
@@ -33,6 +33,7 @@
         <fabric8.parentProfiles>feature-camel</fabric8.parentProfiles>
         <fabric8.features/>
         <fabric8.bundles/>
+        <fabric8.profileConfigDir>src/main/resources/fabric8</fabric8.profileConfigDir>
     </properties>
 
     <dependencies>
@@ -77,6 +78,7 @@
     </dependencies>
 
     <build>
+
         <plugins>
             <!-- Camel plugin -->
             <plugin>

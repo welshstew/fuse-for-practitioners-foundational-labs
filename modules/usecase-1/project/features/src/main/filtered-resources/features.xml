@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <features>
   <feature name="fuse-usecase" version="1.0">
-    <feature version="${camel.version}">camel</feature>-
+    <feature version="${camel.version}">camel</feature>
+    <feature version="${camel.version}">camel-bindy</feature>
+    <feature version="${camel.version}">camel-jackson</feature>
+    <feature version="${camel.version}">camel-dozer</feature>
     <bundle>mvn:org.fuse.usecase/routing/1.0</bundle>
   </feature>
 </features>
