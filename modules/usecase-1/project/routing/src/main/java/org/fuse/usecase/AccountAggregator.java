@@ -1,4 +1,4 @@
-package org.example;
+package org.fuse.usecase;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
