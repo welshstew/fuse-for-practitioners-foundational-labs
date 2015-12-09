@@ -51,22 +51,40 @@ The camel-bindy component is required to compile the code
 
 === Develop the Routing module
 
-Develop the Apache Camel route consuming the CSV records files and split the content using as token the carriage return character. For each exchange created call the endpoint of dozer doing
-the csv2json data transformation
+Develop the Apache Camel route consuming the CSV records files and split the content using as token the carriage return character.
+The correctly splitted messages should be send the outbox file endpoint.
 
 File uri inbox endpoint : src/data/inbox?fileName=customers.csv&amp;noop=true
 File uri outbox endpoint : src/data/outbox?fileName=csv-record-${date:now:yyyyMMdd}.txt
-File uri error endpoint : src/data/error?fileName=account-${property.CamelSplitIndex}.json
 
 === Define the csv2json data transformation
 
-Use the JBoss Fuse Data Transformation Mapper tool to create, using the wizard, a csv2json transformation. Use as input format the Customer Java class created previously and select the
-target model using the `acount.json` file located under the directory `src/main/resources/schema/json/account.json`. When the datatransformation file has been created, then edit
-the file to map the Customer fields with their corresponding fields created within the Account, Company and Contact classes.
+Within the Fuse Camel editor, drag and drop a "Data Transformation" endpoint to create, using the wizard, a csv2json transformation. Use as input format the Customer Java class created previously and select the
+target model using the `acount.json` file located under the directory `src/main/resources/schema/json/account.json`.
 
-Remark : By default, the tool will generate the classes under the package name `account`. You can rename the package to use as package name `org.globex`. If you change the package name, then
-it will be required that you also edit the transformation file the change the location of the classB like also the targetModel field within the endpoint added within the Apache Camel Route
+images::images/csv2json.png[]
 
+When the data transformation file has been created, then edit the file to map the Customer fields with their corresponding fields created within the Account, Company and Contact classes.
+
+images::images/csv2json-mapping.png[]
+
+Remark : By default, the tool will generate the classes under the package name `account` for the json model. You can rename the package to by example `org.globex` instead of the `account` name. If you change the package name, then
+it will be required that you also edit the transformation file the change the location of the classB (= target model) like also the targetModel field within the endpoint added within the Apache Camel Route.
+
+As the csv input source is not available as source when you generate the data mapping, then the Bindy dataformat has not been added within the <DataFormats> xml tag of the Apachz Camel
+route. So edit the code source of the Apache Camel route to add the <bindy /> xml tag with the following paramaters : id = csv, type = csv and classType="org.acme.Customer"
+Update also the endpoint definition to use this csv data format to unmarshall the content. So, add a unmarshalId parameter.
+
+=== Use the Data Transformation Endpoint
+
+Update the Apache Camel Route to include the data transformation endpoint after the exchanges have been splitted.
+
+=== Add a DLQ strategy
+
+Implement the DLQ pattern using the onException interceptor and move the faulty exchanged to a file error endpoint.
+
+File uri error endpoint : src/data/error?fileName=account-${property.CamelSplitIndex}.json
+Exception type to be tracked by the onException interceptor : java.lang.IllegalArgumentException
 
 === Develop the JUnit Test
 
