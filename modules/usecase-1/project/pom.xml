@@ -8,7 +8,7 @@
     <artifactId>project</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>
-    <name>Fuse :: Use Case :: project</name>
+    <name>Fuse :: Use Case :: Project</name>
 
     <modules>
         <module>routing</module>

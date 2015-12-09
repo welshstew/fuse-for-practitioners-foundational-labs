@@ -12,6 +12,7 @@ The DLQ pattern must be implemented to move the "erroneous" CSV records into an 
 * Map the fields as defined within the table
 * Transform the Java object created (= org.globex.Account) into individual JSON file
 * Implement the DLQ Pattern to move the erroneous CSV record(s) into an error folder
+* Design a unit test to validate the data transformations of the CSV message to JSON
 
 :numbered:
 

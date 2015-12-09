@@ -54,7 +54,7 @@ save into a file.
 
 The DLQ pattern must be implemented to move the "erroneous" CSV records into an error folder (using Exception Strategy and DLQErrorHandler).
 
-The project to be developed must contain the unit tests to test the data transformations of the message.
+The project to be developed must contain a unit test to test the data transformations of the CSV message to JSON.
 
 * Time estimated : ?
 * How to evaluate the solution of the student : ?
