@@ -105,4 +105,23 @@ mvn clean install
 mvn camel:run
 ----
 
+=== Bonus
+
+Define the features XML file to deploy the project on JBoss Fuse 6.2.1 and test it using these commands to be executed within the Fuse console.
+
+[source]
+----
+addurl mvn:org.fuse.usecase/features/1.0/xml/features
+features:install usecase-camel-bindy-json
+----
+
+Instead of using the features XML file, you can also create a Fabric8 profile by editing the <fabric8.xxxx> xml tags that you have within the pom.xml routing file
+and next execute this command to create the profile into JBoss Fuse Fabric
+
+[source]
+----
+mvn fabric8:deploy
+----
+
+
 
