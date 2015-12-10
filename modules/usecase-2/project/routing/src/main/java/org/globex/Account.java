@@ -1,6 +1,7 @@
 package org.globex;
 
 public class Account {
+
     private Company company;
     private Contact contact;
 

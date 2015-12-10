@@ -4,9 +4,11 @@ import org.globex.Account;
 import org.globex.CorporateAccount;
 
 import javax.jws.WebService;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
-@WebService(endpointInterface = "org.fuse.usecase.service.CustomerService")
-public class CustomerServiceImpl implements CustomerService {
+@WebService(endpointInterface = "org.fuse.usecase.service.CustomerWS")
+@XmlSeeAlso({org.globex.CorporateAccount.class})
+public class CustomerWSImpl implements CustomerWS {
 
     @Override public CorporateAccount updateAccount(Account account) {
         CorporateAccount corporateAccount = new CorporateAccount();

@@ -19,6 +19,7 @@
 
         <!-- Versions should be the same as defined within the Fuse BOM -->
         <camel.version>2.15.1.redhat-621084</camel.version>
+        <cxf.version>2.15.1.redhat-621084</cxf.version>
 
         <!-- Apache Maven plugins -->
         <build-helper-maven-plugin.version>1.9.1</build-helper-maven-plugin.version>

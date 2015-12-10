@@ -35,7 +35,8 @@
 
         <fabric8.profile>fuse-usecase1</fabric8.profile>
         <fabric8.parentProfiles>feature-camel</fabric8.parentProfiles>
-        <fabric8.features>camel-spring camel-dozer camel-jackson camel-bindy camel-cxf camel-sql</fabric8.features>
+        <fabric8.features>camel-spring camel-dozer camel-jackson camel-bindy camel-cxf camel-sql
+        </fabric8.features>
         <fabric8.bundle>mvn:org.fuse.usecase/routing/1.0</fabric8.bundle>
         <fabric8.profileConfigDir>src/main/resources/fabric8</fabric8.profileConfigDir>
     </properties>
@@ -64,6 +65,25 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http-jetty</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-extension-providers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-client</artifactId>
+        </dependency>
+        <!-- Required for org.apache.cxf.jaxrs.provider.json.JSONProvider -->
+        <dependency>
+            <groupId>org.codehaus.jettison</groupId>
+            <artifactId>jettison</artifactId>
+        </dependency>
+        <!-- Required for com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <version>2.4.3</version>
         </dependency>
 
         <dependency>
@@ -160,6 +180,25 @@
                                 </artifact>
                             </artifacts>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-java2ws-plugin</artifactId>
+                <version>3.0.4</version>
+                <executions>
+                    <execution>
+                        <id>process-classes</id>
+                        <phase>process-classes</phase>
+                        <configuration>
+                            <className>org.fuse.usecase.service.CustomerWS</className>
+                            <genWsdl>true</genWsdl>
+                            <verbose>true</verbose>
+                        </configuration>
+                        <goals>
+                            <goal>java2ws</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

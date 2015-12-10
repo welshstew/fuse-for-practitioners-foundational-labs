@@ -14,15 +14,30 @@
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
     <cxf:cxfEndpoint id="customerWebService" address="http://localhost:9090/ws/customerService"
-                     serviceClass="org.fuse.usecase.service.CustomerService" loggingFeatureEnabled="true">
+                     serviceClass="org.fuse.usecase.service.CustomerWS"
+                     loggingFeatureEnabled="true">
     </cxf:cxfEndpoint>
 
-    <bean id="customerService" class="org.fuse.usecase.service.CustomerServiceImpl"/>
+    <cxf:rsServer id="customerRestService" address="http://localhost:9191/rest"
+                  serviceClass="org.fuse.usecase.service.CustomerRest"
+                  loggingFeatureEnabled="true" >
+        <cxf:providers>
+            <ref bean="jsonProvider"/>
+        </cxf:providers>
+    </cxf:rsServer>
+
+    <bean id="customerWSImplBean" class="org.fuse.usecase.service.CustomerWSImpl"/>
+    <bean id="customerRestImplBean" class="org.fuse.usecase.service.CustomerRestImpl"/>
+
+    <!--  THIS PROVIDER DOESN'T WORK & RETURN ERROR 415 Unsupported Media Type
+      It can't also handle the Body : No message body reader has been found for
+      class CXF_Test.cxf_test.Book, ContentType: application/json
+      <bean id="jsonProvider" class="org.apache.cxf.jaxrs.provider.json.JSONProvider"/>
+    -->
+    <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider"/>
 
     <camelContext trace="false" xmlns="http://camel.apache.org/schema/spring">
-
         <propertyPlaceholder id="properties" location="fabric8/route.properties"/>
-
         <!--
              Transformation Endpoint doing csv2java conversion
              Step 1 : csv record is converted java using camel bindy
@@ -57,6 +72,7 @@
             </split>
         </route>
 
+        <!-- -->
         <route>
             <from uri="file:{{fileOutput}}"/>
             <convertBodyTo type="String"/>
@@ -68,10 +84,18 @@
             <log message="Response received : ${body}"/>
         </route>
 
+        <!-- CXF REST Service -->
+        <route>
+            <from uri="cxfrs:bean:customerRestService"/>
+            <log message="Message received : ${body}"/>
+            <bean ref="customerRestImplBean" method="enrich"/>
+        </route>
+
+        <!-- CXF WebService -->
         <route>
             <from uri="cxf:bean:customerWebService"/>
             <log message="Message received : ${body}"/>
-            <bean ref="customerService" method="updateAccount"/>
+            <bean ref="customerWSImplBean" method="updateAccount"/>
         </route>
 
     </camelContext>

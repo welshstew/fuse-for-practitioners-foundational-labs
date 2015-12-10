@@ -7,7 +7,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 @WebService
-public interface CustomerService {
+public interface CustomerWS {
 
     @WebMethod CorporateAccount updateAccount(Account account);
 
