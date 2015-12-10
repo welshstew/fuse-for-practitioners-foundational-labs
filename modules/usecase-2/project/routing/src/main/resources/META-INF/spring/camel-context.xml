@@ -15,7 +15,7 @@
 
     <cxf:cxfEndpoint id="customerWebService" address="http://localhost:9090/ws/customerService"
                      serviceClass="org.fuse.usecase.service.CustomerWS"
-                     loggingFeatureEnabled="false">
+                     loggingFeatureEnabled="true">
     </cxf:cxfEndpoint>
 
     <cxf:rsServer id="customerRestService" address="http://localhost:9191/rest"
@@ -33,6 +33,7 @@
         </cxf:providers>
     </cxf:rsClient>
 
+    <bean id="reconcileData" class="org.fuse.usecase.AccountAggregator"/>
     <bean id="customerWSImplBean" class="org.fuse.usecase.service.CustomerWSImpl"/>
     <bean id="customerRestImplBean" class="org.fuse.usecase.service.CustomerRestImpl"/>
 
@@ -86,35 +87,64 @@
             <unmarshal>
                 <json library="Jackson" unmarshalTypeName="org.globex.Account"/>
             </unmarshal>
-            <multicast>
-                <to uri="direct://callWSEndpoint"/>
-                <to uri="direct://callRestEndpoint"/>
-            </multicast>
+            <!-- <enrich strategyRef="reconcileData" uri="direct://callRestEndpoint"/>-->
+            <!--
+            <to uri="direct://callRestEndpoint"/>
+            -->
+            <setHeader headerName="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setHeader headerName="Accept">
+                <constant>application/json</constant>
+            </setHeader>
+            <setHeader headerName="CamelHttpMethod">
+                <constant>POST</constant>
+            </setHeader>
+            <setHeader headerName="CamelHttpPath">
+                <constant>/customerservice/enrich</constant>
+            </setHeader>
+            <setHeader headerName="CamelCxfRsUsingHttpAPI">
+                <constant>true</constant>
+            </setHeader>
+            <to uri="cxfrs:bean:customerRestServiceClient"/>
+
+            <log message=">> REST IN result : ${in.body.company.name}, ${in.body.company.geo}"/>
+            <log message=">> REST OUT result : ${out.body}"/>
+            <!--
+            <to uri="direct://callWSEndpoint"/>
+            <bean beanType="org.fuse.usecase.ProcessorBean" method="process"/>
+            ${body.clientId}, ${body.salesRepresentative},
+            -->
+
+            <!--<log loggingLevel="INFO"
+                 message=">> Aggregated result : ${body.company.name}, ${body.company.geo}, ${body.company.active}, ${body.contact.firstName}, ${body.contact.lastName},${body.contact.streetAddr}, ${body.contact.city}, ${body.contact.state}, ${body.contact.zip}, ${body.contact.phone}"/>
+            -->
         </route>
 
-        <!-- CXF REST Service -->
+        <!-- REST Service -->
         <route>
             <from uri="cxfrs:bean:customerRestService"/>
-            <log message="Message received : ${body}"/>
-            <bean ref="customerRestImplBean" method="enrich"/>
+            <transform>
+                <method ref="customerRestImplBean" method="enrich"/>
+            </transform>
+            <!-- <bean ref="customerRestImplBean" method="enrich"/> -->
         </route>
 
-        <!-- CXF WebService -->
+        <!-- WebService -->
         <route>
             <from uri="cxf:bean:customerWebService"/>
-            <log message="WebService Message received : ${body}"/>
             <bean ref="customerWSImplBean" method="updateAccount"/>
         </route>
 
-        <!-- Call CXF Client -->
+        <!-- Call WebService Client -->
         <route>
             <from uri="direct://callWSEndpoint"/>
             <to uri="cxf:bean:customerWebService"/>
-            <bean beanType="org.fuse.usecase.ProcessorBean" method="process"/>
-            <log message=">> WebService Response received : ${body[0].salesContact}"/>
+            <log loggingLevel="INFO"
+                 message=">> WebService Response : ${body[0].id}, ${body[0].salesContact}, ${body[0].company.geo}, ${body[0].contact.firstName}, ${body[0].contact.lastName} "/>
         </route>
 
-        <!-- Call CXF Client -->
+        <!-- Call REST Client -->
         <route>
             <from uri="direct://callRestEndpoint"/>
             <onException>
@@ -140,10 +170,9 @@
                 <constant>true</constant>
             </setHeader>
             <to uri="cxfrs:bean:customerRestServiceClient"/>
-            <marshal>
-                <json library="Jackson" unmarshalTypeName="org.globex.Account"/>
-            </marshal>
-            <log message=">> REST POST received : ${body}"/>
+            <!--            <unmarshal>
+                            <json library="Jackson" unmarshalTypeName="org.globex.Account"/>
+                        </unmarshal>-->
         </route>
 
     </camelContext>

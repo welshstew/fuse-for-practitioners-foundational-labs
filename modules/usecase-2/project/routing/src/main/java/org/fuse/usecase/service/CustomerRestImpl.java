@@ -4,6 +4,8 @@ import org.acme.Customer;
 import org.globex.Account;
 import org.globex.Company;
 
+import java.util.Random;
+
 public class CustomerRestImpl implements CustomerRest {
 
     private static final String NA_REGION = "NORTH_AMERICA";
@@ -24,6 +26,7 @@ public class CustomerRestImpl implements CustomerRest {
         case "EA":
             company.setGeo(EAST_REGION); break;
         }
+        account.setCompany(company);
         return account;
     }
 }
