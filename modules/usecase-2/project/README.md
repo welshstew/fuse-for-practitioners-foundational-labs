@@ -64,8 +64,8 @@ mvn clean install
 - When the Console appears, then deploy the XML features file and install the use case
 
 ```
-addurl mvn:org.fuse.usecase/features/1.0/xml/features
-features:install usecase-camel-bindy-json
+addurl mvn:org.fuse.usecase2/features/1.0/xml/features
+features:install usecase-camel-aggregation-db
 ```
 
 - Copy/paste the `src/data/inbox/customers.csv` file to the `src/data/inbox` folder created under the home directory of the JBoss Fuse server

@@ -25,7 +25,7 @@ mvn clean install
 - When the Console appears, then deploy the XML features file and install the use case
 
 ```
-addurl mvn:org.fuse.usecase/features/1.0/xml/features
+addurl mvn:org.fuse.usecase1/features/1.0/xml/features
 features:install usecase-camel-bindy-json
 ```
 

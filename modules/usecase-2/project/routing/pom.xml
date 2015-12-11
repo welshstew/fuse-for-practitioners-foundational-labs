@@ -16,16 +16,18 @@
 
     <properties>
         <osgi-private-package>
-            org.fuses.usecase.routing;version="1.0"
+            org.fuse.usecase,
+            org.fuse.usecase.service,
+            org.fuse.usecase.routing
         </osgi-private-package>
         <osgi-import-package>
-            !org.fuses.usecase.routing;version="1.0",
             org.apache.camel;version="[2.0,3.0)",
             org.apache.camel.builder;version="[2.0,3.0)",
             org.apache.camel.model;version="[2.0,3.0)",
             org.apache.camel.impl;version="[2.0,3.0)",
             org.apache.camel.spi;version="[2.0,3.0)",
             org.apache.camel.component.dozer;version="[2.0,3.0)",
+            org.h2,
             *
         </osgi-import-package>
         <osgi-export-package>
