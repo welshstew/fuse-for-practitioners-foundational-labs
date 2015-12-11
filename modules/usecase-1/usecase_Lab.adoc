@@ -1,4 +1,4 @@
-== Use Case 1 - Camel Route with CSV/Bindy Dataformat & DataMapper Tool to enhance the Java objects
+== Use Case 1 - Camel Route with CSV/Bindy Dataformat & DataMapper Tool to transform the Java objects
 
 The purpose of the use case is to develop some Apache Camel pipeline routes where we will process CSV files, read the CSV records and transform the records to Java Objects.
 Next, we will split the List of the Java Objects to enhance each Java Object using the JBoss Fuse Data Mapper tool. The java object enhanced will be finally transformed into a JSON String that you will
