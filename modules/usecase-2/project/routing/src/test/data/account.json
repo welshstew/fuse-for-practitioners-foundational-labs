@@ -12,5 +12,7 @@
     "state": "AZ",
     "zip": "85017",
     "phone": "602-555-1100"
-  }
+  },
+  "clientId":0,
+  "salesRepresentative":null
 }
