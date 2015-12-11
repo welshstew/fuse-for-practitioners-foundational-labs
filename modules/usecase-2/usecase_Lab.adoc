@@ -5,8 +5,9 @@ Aggregate the responses received and take care about the transformation XML/JSon
 
 .Goals
 * Design the Apache Camel routes consuming the json files and exposing the REST and WebService endpoint
-* Use the recipientList to distribute the message to the services (REST/WebService)
+* Use the multicast EIP pattern to distribute the messages to the services (REST/WebService)
 * Design the CXF Web Service using jax-ws annotations
+* Use Camel CXFRS component to setup the Client & REST Server
 * Aggregate the messages received using the aggregation EIP pattern
 * Save the message aggregated into a SQL database using the Spring SQL component
 
