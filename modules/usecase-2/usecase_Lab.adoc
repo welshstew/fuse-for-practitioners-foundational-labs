@@ -90,7 +90,7 @@ CREATE TABLE USECASE.T_ACCOUNT (
     <property name="username" value="sa"/>
     <property name="password" value=""/>
 </bean>
-``
+```
 
 === Design the REST Service
 
