@@ -1,0 +1,76 @@
+== Use Case 3 - Camel Route publishing the messages into a queue and handling the DLQ messages
+
+The purpose of this use case is to extend/revisit the use case 1 to publish the JSON messages into different queues instead of the folders outbox and error.
+For the erroneous messages, you will replace the DLQ folder with a DLQ queue and will develop a strategy to update/correct the erroneous messages
+and re inject these messages into the normal flow.
+
+A notification/alert mechanism will also be developed to send a message into a topic
+to which a client is connected to be informed about the error reported for the faulty messages. The erroneous message and the message code
+received will be saved into a error table.
+
+.Goals
+* Combine the Routing and Integration technology with a messaging platform
+* Develop a project able to use locally Apache ActiveMQ or JBoss A-MQ to publish the messages into different queues
+* Use the DLQ pattern supported by Apache ActiveMQ / JBoss A-MQ
+* Notify the client using a topic that erroneous messages have been produced
+* Report the error within a database
+
+:numbered:
+
+== Import the Project (TODO - Discuss how we will setup the project)
+
+. In JBoss Developer Studio, switch to the *Git* perspective. 
+. Click the icon at the top to clone a Git repository and add the clone to this view.
+. In the *URI* text box, copy and paste the following: 
++
+------
+https://github.com/gpe-mw-training/fuse-for-practitioners-labs.git
+------
++
+. Switch to *Project Explorer* for the *JBoss* perspective.
+. Import a new Maven project by selecting *File -> Import -> Maven -> Existing Maven Projects -> Next*. Import the `core` and it's parent project
+. Navigate to the location of the Git projects for the Data Transformation tool and click *Finish*.
+. Click the *Project Explorer* tab and expand the `Inbound` project node. 
++  
+.Application structure
+image::images/application_structure.png[width="40%"]
+
+. Examine the following files and folders that appear in the expanded view:
+
+* `routing`: module in which you will develop the `route`, `unit test` of the use-case.
+** `src/main/resources/schema` : JSON and csv schemas files you will need to create the Data Transformation
+* `parent` : Contain JBoss Fuse 6.2.1 dependencies, properties definition and maven plugins used by the modules
+* `features` : Apache Karaf XML features file to be used to deploy the `usecase` project on JBoss Fuse without Fabric technology
+
+
+
+=== Build the `routing` Project & test it locally
+
+. On the command line, run the following commands:
+
+[source]
+----
+mvn clean install
+mvn camel:run
+----
+
+=== Bonus
+
+Define the features XML file to deploy the project on JBoss Fuse 6.2.1 and test it using these commands to be executed within the Fuse console.
+
+[source]
+----
+addurl mvn:org.fuse.usecase/features/1.0/xml/features
+features:install usecase-camel-bindy-json
+----
+
+Instead of using the features XML file, you can also create a Fabric8 profile by editing the <fabric8.xxxx> xml tags that you have within the pom.xml routing file
+and next execute this command to create the profile into JBoss Fuse Fabric
+
+[source]
+----
+mvn fabric8:deploy
+----
+
+
+
