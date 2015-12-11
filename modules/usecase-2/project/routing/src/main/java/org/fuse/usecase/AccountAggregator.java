@@ -26,19 +26,23 @@ public class AccountAggregator implements AggregationStrategy {
         }
 
         Account account = oldExchange.getIn().getBody(Account.class);
-        MessageContentsList msg = newExchange.getIn().getBody(MessageContentsList.class);
-        CorporateAccount ca = (CorporateAccount) msg.get(0);
+        CorporateAccount ca = newExchange.getIn().getBody(CorporateAccount.class);
         account.setClientId(ca.getId());
         account.setSalesRepresentative(ca.getSalesContact());
         oldExchange.getIn().setBody(account);
 
         return oldExchange;
 
-/*        if (oldExchange == null) {
+
+        /*
+        if (oldExchange == null) {
             Account account = newExchange.getIn().getBody(Account.class);
             newExchange.getIn().setBody(account);
             return newExchange;
         }
+
+        //MessageContentsList msg = newExchange.getIn().getBody(MessageContentsList.class);
+        //CorporateAccount ca = (CorporateAccount) msg.get(0);
 
         Account existing = oldExchange.getIn().getBody(Account.class);
         Account account = newExchange.getIn().getBody(Account.class);
@@ -46,7 +50,8 @@ public class AccountAggregator implements AggregationStrategy {
         account.getCompany().setGeo(geo);
         oldExchange.getIn().setBody(account);
 
-        return oldExchange;*/
+        return oldExchange;
+        */
 
     }
     
