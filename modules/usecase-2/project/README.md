@@ -1,4 +1,4 @@
-# Fuse Use Case Project
+# Fuse Use Case 2 Project
 
 ## Maven Modules
 
