@@ -1,16 +1,14 @@
 package org.fuse.usecase;
 
-//import org.codehaus.jackson.JsonProcessingException;
-//import org.codehaus.jackson.map.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.globex.Account;
 import org.globex.Company;
 import org.globex.Contact;
 import org.junit.Test;
-import org.omg.CORBA.Object;
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
@@ -22,7 +20,7 @@ public class JacksonCompanyTest {
         Account account = new Account();
 
         Company company = new Company();
-        company.setName("Rotobots");
+        company.setName("Robocops");
         company.setGeo("NA");
         company.setActive(true);
 
@@ -48,6 +46,7 @@ public class JacksonCompanyTest {
         String json = "{\"company\":{\"name\":\"Rotobots\",\"geo\":\"NA\",\"active\":true},\"contact\":{\"firstName\":\"Bill\",\"lastName\":\"Smith\",\"streetAddr\":\"100 N Park Ave.\",\"city\":\"Phoenix\",\"state\":\"AZ\",\"zip\":\"85017\",\"phone\":\"602-555-1100\"}}";
         Account account = new ObjectMapper().readValue(json,Account.class);
         assertNotNull(account);
+        assertEquals("Robocops",account.getCompany().getName());
     }
 
 }
