@@ -160,6 +160,10 @@
             <id>Maven Central</id>
             <url>http://repo1.maven.org/maven2/</url>
         </repository>
+        <repository>
+            <id>Tech Preview</id>
+            <url>http://maven.repository.redhat.com/techpreview/all</url>
+        </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
@@ -180,6 +184,10 @@
         <pluginRepository>
             <id>jboss-fuse-ea</id>
             <url>http://repository.jboss.org/nexus/content/groups/ea</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>Tech Preview</id>
+            <url>http://maven.repository.redhat.com/techpreview/all</url>
         </pluginRepository>
     </pluginRepositories>
 
