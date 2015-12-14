@@ -2,7 +2,7 @@
 *~
 ~lock.*
 ~$*
-.DS_Store
+*.DS_Store
 *.svn/
 *.nogit/
 *project/
