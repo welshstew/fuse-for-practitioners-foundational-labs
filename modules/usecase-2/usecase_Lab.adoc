@@ -42,21 +42,23 @@ image::images/application_structure.png[width="40%"]
 
 To use the Camel SQL component it is required that first you setup a database. Follow these instructions
 
-- [Download](http://www.h2database.com/html/main.html) the H2 database
-- Unzip the content and open a terminal
-- Launch it `./h2-1.4.190/bin/h2.sh`
-- Within your browser `http://localhost:8082/login.jsp`, setup the connection
+* [Download](http://www.h2database.com/html/download.html) the H2 database
+* Unzip the content and open a terminal
+* Launch it `./h2-1.4.190/bin/h2.sh`
+* Within your browser `http://localhost:8082/login.jsp`, setup the connection
 
-```
+[source]
+----
 Driver class : org.h2.Driver
 JDBC Url : jdbc:h2:tcp://localhost/~/usecaseDB
 User : sa
 Password :
-```
+----
 
-- Create the DB using the `routing/src/main/resources/schema/db/usecaseDB.sql` script and run these commands within the browser
+* Create the DB using the `routing/src/main/resources/schema/db/usecaseDB.sql` script and run these commands within the browser
 
-```
+[source]
+----
 DROP SCHEMA USECASE;
 CREATE SCHEMA USECASE;
 CREATE TABLE USECASE.T_ACCOUNT (
@@ -77,9 +79,9 @@ CREATE TABLE USECASE.T_ACCOUNT (
     CREATION_DATE TIMESTAMP,
     CREATION_USER VARCHAR(255)
 );
-```
+----
 
-- Include a bean defintion with the Apache Route to declare the Datasource that the SQL component will use to accesss
+* Include a bean definition with the Apache Route to declare the Datasource that the SQL component will use to access
   the database
 
 ```
