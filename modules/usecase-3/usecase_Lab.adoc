@@ -6,7 +6,7 @@ and re inject these messages into the normal flow. A redelivery policy must be p
 on the DLQ and the initialRedeliveryDelay must be off 500ms.
 
 A notification/alert mechanism must be developed to send a message to topic containing the error code and error message.
-A Camel JMS client is connected to this topic in order to be informed about the error reported for the faulty messages. The erroneous message and the message code
+A Camel JMS client is connected to this topic in order to be informed about the error reported when faulty messages are thrown. The erroneous message and the message code
 received will be saved into an error table.
 
 .Goals
@@ -18,7 +18,7 @@ received will be saved into an error table.
 * Use an idempotentConsumer to avoid to consume multiple times the error redelivered
 * Report the error (code and message) within the usecase database (table T_ERROR)
 * Report also the error on the console using Log4j, the logging level "DEBUG" and the logger name "org.fuse.usecase"
- Use the Camel SQL component with the headers to setup the INSERT query
+* Use the Camel SQL component with headers to INSERT the record within the DB.
 
 :numbered:
 
@@ -88,8 +88,11 @@ CREATE TABLE USECASE.T_ACCOUNT (
 );
 
 CREATE TABLE USECASE.T_ERROR (
+    ID BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     ERROR_CODE SMALLINT NOT NULL,
-    ERROR_MESSAGE VARCHAR(255)
+    ERROR_MESSAGE VARCHAR(255),
+    MESSAGE VARCHAR(512),
+    STATUS CHAR(5)
 );
 ----
 

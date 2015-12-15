@@ -123,7 +123,6 @@
         <!-- Publish the error code and error message on a topic -->
         <route>
             <from uri="direct:notify"/>
-            <!--<bean beanType="org.fuse.usecase.ProcessorBean" method="debug"/>-->
             <to uri="amq-tx:{{topicNotification}}"/>
         </route>
 
@@ -135,13 +134,12 @@
                      values (:#${header.error-code}, :#${header.error-message}, :#${header.message}, 'ERROR');"/>
         </route>
 
-        <!-- Inject corected recors/messages -->
+        <!-- Inject correct record/message and update their status to CLOSE -->
         <route>
             <from uri="sql:select MESSAGE, ID from USECASE.T_ERROR where STATUS = 'FIXED' ?consumer.onConsume=update USECASE.T_ERROR set STATUS='CLOSE' where ID = :#ID"/>
             <setBody>
                 <simple>${body[message]}</simple>
             </setBody>
-            <bean beanType="org.fuse.usecase.ProcessorBean" method="debug"/>
             <log message=">> Body : ${body}"/>
             <to uri="amq-tx:{{queueInput}}"/>
         </route>
