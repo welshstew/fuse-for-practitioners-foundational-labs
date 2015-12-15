@@ -20,6 +20,7 @@
 
         <!-- Versions should be the same as defined within the Fuse BOM -->
         <camel.version>2.15.1.redhat-621084</camel.version>
+        <activemq.version>5.11.0.redhat-621084</activemq.version>
 
         <!-- Apache Maven plugins -->
         <build-helper-maven-plugin.version>1.9.1</build-helper-maven-plugin.version>
@@ -34,6 +35,7 @@
         <osgi-export-package/>
         <osgi-private-package/>
         <osgi-dynamic-package/>
+        <osgi-require-bundle/>
     </properties>
 
     <dependencyManagement>
@@ -51,6 +53,13 @@
                 <version>${camel.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- Not defined within the BOM -->
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-jaas</artifactId>
+                <version>${activemq.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -130,6 +139,7 @@
                         <Private-Package>${osgi-private-package}</Private-Package>
                         <Export-Package>${osgi-export-package}</Export-Package>
                         <DynamicImport-Package>${osgi-dynamic-package}</DynamicImport-Package>
+                        <Require-Bundle>${osgi-require-bundle}</Require-Bundle>
                     </instructions>
                 </configuration>
             </plugin>

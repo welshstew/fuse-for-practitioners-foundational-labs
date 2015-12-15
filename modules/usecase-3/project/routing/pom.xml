@@ -32,7 +32,8 @@
         <osgi-export-package>
             org.acme,org.globex
         </osgi-export-package>
-        <osgi-dynamic-package></osgi-dynamic-package>
+        <osgi-dynamic-package>*</osgi-dynamic-package>
+        <osgi-require-bundle>org.apache.activemq.activemq-osgi</osgi-require-bundle>
 
         <fabric8.profile>fuse-usecase3</fabric8.profile>
         <fabric8.parentProfiles>feature-camel</fabric8.parentProfiles>
@@ -83,6 +84,10 @@
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-jaas</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
@@ -139,7 +144,7 @@
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-maven-plugin</artifactId>
                 <configuration>
-                    <applicationContextUri>META-INF/spring/*.xml</applicationContextUri>
+                    <applicationContextUri>META-INF/spring/*.xml;META-INF/spring/local/*.xml</applicationContextUri>
                 </configuration>
             </plugin>
 

@@ -112,7 +112,7 @@ Define the features XML file to deploy the project on JBoss Fuse 6.2.1 and test 
 
 [source]
 ----
-addurl mvn:org.fuse.usecase/features/1.0/xml/features
+addurl mvn:org.fuse.usecase3/features/1.0/xml/features
 features:install usecase-dlq-jms
 ----
 

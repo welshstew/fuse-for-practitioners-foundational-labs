@@ -1,32 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:amq="http://activemq.apache.org/schema/core"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://camel.apache.org/schema/spring
-       http://camel.apache.org/schema/spring/camel-spring.xsd
-       http://activemq.apache.org/schema/core
-       http://activemq.apache.org/schema/core/activemq-core.xsd">
-
-    <!-- ActiveMQ Broker -->
-    <broker brokerName="demo" xmlns="http://activemq.apache.org/schema/core">
-        <destinationPolicy>
-            <policyMap>
-                <policyEntries>
-                    <policyEntry queue=">">
-                        <deadLetterStrategy>
-                            <individualDeadLetterStrategy queuePrefix="DLQ." useQueueForQueueMessages="true"/>
-                        </deadLetterStrategy>
-                    </policyEntry>
-                </policyEntries>
-            </policyMap>
-        </destinationPolicy>
-        <transportConnectors>
-            <transportConnector name="tcp" uri="tcp://localhost:61618"/>
-        </transportConnectors>
-    </broker>
+       http://camel.apache.org/schema/spring/camel-spring.xsd">
 
     <!-- H2 DB -->
     <bean id="usecaseDB" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -48,12 +27,15 @@
 
     <!-- JMS ConnectionFactory  -->
     <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="tcp://localhost:61618"/>
-        <property name="redeliveryPolicy" ref="redeliveryPolicy"/>
+        <property name="brokerURL" value="tcp://localhost:61616"/>
+        <property name="userName" value="admin"/>
+        <property name="password" value="admin"/>
+        <property name="redeliveryPolicy">
+            <bean class="org.apache.activemq.RedeliveryPolicy">
+                <property name="maximumRedeliveries" value="1"/>
+            </bean>
+        </property>
     </bean>
-
-    <!-- Redelivery Policy -->
-    <amq:redeliveryPolicy id="redeliveryPolicy" maximumRedeliveries="2" initialRedeliveryDelay="500"/>
 
     <!-- ActiveMQ Camel Component - Tx -->
     <bean id="amq-tx" class="org.apache.activemq.camel.component.ActiveMQComponent">
@@ -64,7 +46,10 @@
 
     <!-- ActiveMQ Camel Component - No Tx -->
     <bean id="amq-notx" class="org.apache.activemq.camel.component.ActiveMQComponent">
-        <property name="brokerURL" value="tcp://localhost:61618"/>
+        <property name="brokerURL" value="tcp://localhost:61616"/>
+        <property name="userName" value="admin"/>
+        <property name="password" value="admin"/>
+        <property name="connectionFactory" ref="jmsConnectionFactory"/>
     </bean>
 
     <bean id="memoryRepo" class="org.apache.camel.processor.idempotent.MemoryIdempotentRepository"/>
@@ -92,14 +77,11 @@
         <!-- Route Definition -->
         <route>
             <!-- Consume messages from queue -->
-            <from uri="amq-tx:{{queueInput}}"/>
+            <from uri="amq-notx:{{queueInput}}?transacted=true"/>
             <onException>
                 <exception>java.lang.IllegalArgumentException</exception>
-                <handled>
-                    <constant>true</constant>
-                </handled>
-                <log message=">> Error took place. Message will bemoved to DLQ"/>
-                <setHeader headerName="error-code">
+                <log message=">> Error took place. Message will be moved to DLQ"/>
+<!--                <setHeader headerName="error-code">
                     <constant>111</constant>
                 </setHeader>
                 <setHeader headerName="error-message">
@@ -108,28 +90,34 @@
                 <setHeader headerName="message">
                     <simple>${body}</simple>
                 </setHeader>
-                <idempotentConsumer messageIdRepositoryRef="memoryRepo">
-                    <header>error-code</header>
-                    <to uri="direct:notify"/>
-                </idempotentConsumer>
+                <to uri="direct:notify"/>-->
             </onException>
             <split>
                 <tokenize token="\n"/>
                 <to ref="csv2json"/>
-                <to uri="amq-tx:{{queueOutput}}"/>
+                <log message="!!!! MESSAGE TO BE PUBLISHED ON THE QUEUE"/>
+                <to uri="amq-notx:{{queueOutput}}"/>
             </split>
         </route>
 
         <!-- Publish the error code and error message on a topic -->
         <route>
             <from uri="direct:notify"/>
-            <to uri="amq-tx:{{topicNotification}}"/>
+            <log message="!!!! NOTIFICATION SEND"/>
+            <to uri="amq-notx:{{topicNotification}}"/>
+<!--            <idempotentConsumer messageIdRepositoryRef="memoryRepo" eager="false">
+                <header>error-code</header>
+                <log message="!!!! NOTIFICATION SEND"/>
+                <to uri="amq-notx:{{topicNotification}}"/>
+            </idempotentConsumer>-->
         </route>
 
         <!-- Consume the Topic message and publish it into the DB -->
         <route>
             <from uri="amq-notx:{{topicNotification}}?clientId=123&amp;durableSubscriptionName=notification"/>
-            <log loggingLevel="DEBUG" logName="org.fuse.usecase" message=">> Error code : ${header.error-code}, Error Message : ${header.error-message}"/>
+            <log message="!!!! NOTIFICATION RECEIVED"/>
+            <log loggingLevel="DEBUG" logName="org.fuse.usecase"
+                 message=">> Error code : ${header.error-code}, Error Message : ${header.error-message}"/>
             <to uri="sql:insert into USECASE.T_ERROR(ERROR_CODE,ERROR_MESSAGE,MESSAGE,STATUS)
                      values (:#${header.error-code}, :#${header.error-message}, :#${header.message}, 'ERROR');"/>
         </route>
