@@ -2,18 +2,23 @@
 
 The purpose of this use case is to extend/revisit the use case 1 to publish the JSON messages into different queues instead of the folders outbox and error.
 For the erroneous messages, you will replace the DLQ folder with a DLQ queue and will develop a strategy to update/correct the erroneous messages
-and re inject these messages into the normal flow.
+and re inject these messages into the normal flow. A redelivery policy must be put in place to attempt 3 times to redeliver the messages before to place them
+on the DLQ and the initialRedeliveryDelay must be off 500ms.
 
-A notification/alert mechanism will also be developed to send a message into a topic
-to which a client is connected to be informed about the error reported for the faulty messages. The erroneous message and the message code
-received will be saved into a error table.
+A notification/alert mechanism must be developed to send a message to topic containing the error code and error message.
+A Camel JMS client is connected to this topic in order to be informed about the error reported for the faulty messages. The erroneous message and the message code
+received will be saved into an error table.
 
 .Goals
 * Combine the Routing and Integration technology with a messaging platform
 * Develop a project able to use locally Apache ActiveMQ or JBoss A-MQ to publish the messages into different queues
 * Use the DLQ pattern supported by Apache ActiveMQ / JBoss A-MQ
-* Notify the client using a topic that erroneous messages have been produced
-* Report the error within a database
+* Implement a redelivery strategy with A-MQ
+* Notify the durable subscriber client using a topic that erroneous messages have been produced
+* Use an idempotentConsumer to avoid to consume multiple times the error redelivered
+* Report the error (code and message) within the usecase database (table T_ERROR)
+* Report also the error on the console using Log4j, the logging level "DEBUG" and the logger name "org.fuse.usecase"
+ Use the Camel SQL component with the headers to setup the INSERT query
 
 :numbered:
 
@@ -82,7 +87,10 @@ CREATE TABLE USECASE.T_ACCOUNT (
     CREATION_USER VARCHAR(255)
 );
 
-TODO
+CREATE TABLE USECASE.T_ERROR (
+    ERROR_CODE SMALLINT NOT NULL,
+    ERROR_MESSAGE VARCHAR(255)
+);
 ----
 
 === Build the `routing` Project & test it locally
