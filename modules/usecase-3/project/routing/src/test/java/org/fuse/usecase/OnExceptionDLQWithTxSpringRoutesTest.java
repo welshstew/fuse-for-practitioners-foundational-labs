@@ -1,7 +1,5 @@
 package org.fuse.usecase;
 
-import org.acme.Customer;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.builder.AdviceWithRouteBuilder;
@@ -104,7 +102,7 @@ public class OnExceptionDLQWithTxSpringRoutesTest extends CamelSpringTestSupport
         });
 
         // We will append a processor after the endpoint saving the JMS messages within the queue
-        // to check that we will save the messages
+        // to check that we will get the messages
         context.getRouteDefinition("queue-split-transform-queue")
                 .adviceWith(context, new AdviceWithRouteBuilder() {
                     @Override public void configure() throws Exception {
