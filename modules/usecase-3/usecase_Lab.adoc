@@ -2,23 +2,22 @@
 
 The purpose of this use case is to extend/revisit the use case 1 to publish the JSON messages into different queues instead of the folders outbox and error.
 For the erroneous messages, you will replace the DLQ folder with a DLQ queue and will develop a strategy to update/correct the erroneous messages
-and re inject these messages into the normal flow. A redelivery policy must be put in place to attempt 3 times to redeliver the messages before to place them
-on the DLQ and the initialRedeliveryDelay must be off 500ms.
+and re inject these messages into the normal flow. A redelivery policy must be put in place to avoid that the client, through the connection factory
+tries to redeliver the erroneous message.
 
 A notification/alert mechanism must be developed to send a message to topic containing the error code and error message.
 A Camel JMS client is connected to this topic in order to be informed about the error reported when faulty messages are thrown. The erroneous message and the message code
-received will be saved into an error table.
+received will be saved into an error table. The corrected error message will be resend to the queue consuming the input messages in order to process it.
 
 .Goals
 * Combine the Routing and Integration technology with a messaging platform
 * Develop a project able to use locally Apache ActiveMQ or JBoss A-MQ to publish the messages into different queues
 * Use the DLQ pattern supported by Apache ActiveMQ / JBoss A-MQ
-* Implement a redelivery strategy with A-MQ
+* Implement a redelivery strategy with Apache ActiveMQ / JBoss A-MQ to disable th redelivery
 * Notify the durable subscriber client using a topic that erroneous messages have been produced
-* Use an idempotentConsumer to avoid to consume multiple times the error redelivered
 * Report the error (code and message) within the usecase database (table T_ERROR)
-* Report also the error on the console using Log4j, the logging level "DEBUG" and the logger name "org.fuse.usecase"
-* Use the Camel SQL component with headers to INSERT the record within the DB.
+* Report also the error on the console using Log4j with the logging level "DEBUG" and the logger name "org.fuse.usecase"
+* Use the Camel SQL component to INSERT the record within the DB and listen to corrected messages from the table T_ERROR
 
 :numbered:
 
@@ -124,5 +123,21 @@ and next execute this command to create the profile into JBoss Fuse Fabric
 mvn fabric8:deploy
 ----
 
+=== Useful SQL scripts
+
+[source]
+----
+INSERT INTO USECASE.T_ACCOUNT (CLIENT_ID,SALES_CONTACT,COMPANY_NAME,COMPANY_GEO,COMPANY_ACTIVE,CONTACT_FIRST_NAME,CONTACT_LAST_NAME,CONTACT_ADDRESS,CONTACT_CITY,CONTACT_STATE,CONTACT_ZIP,CONTACT_PHONE,CREATION_DATE,CREATION_USER) VALUES ('95','Rachel Cassidy','MountainBikers','SOUTH_AMERICA',true,'George','Jungle','1101 Smith St.','Raleigh','NC','27519','919-555-0800','2015-12-15','fuse_usecase');
+
+DELETE FROM USECASE.T_ACCOUNT;
+DELETE FROM USECASE.T_ERROR;
+
+SELECT * FROM USECASE.T_ACCOUNT;
+SELECT * FROM USECASE.T_ERROR;
+
+UPDATE USECASE.T_ERROR SET MESSAGE='Error,EU,true,Fred,Quicksand,202 Barney Blvd.,Rock City,MI,19728,313-555-1234', STATUS='FIXED' WHERE ID=8;
+
+DROP SCHEMA USECASE;
+----
 
 

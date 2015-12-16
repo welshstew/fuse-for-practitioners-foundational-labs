@@ -49,7 +49,13 @@
         <property name="brokerURL" value="tcp://localhost:61616"/>
         <property name="userName" value="admin"/>
         <property name="password" value="admin"/>
-        <property name="connectionFactory" ref="jmsConnectionFactory"/>
+        <property name="connectionFactory">
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+                <property name="brokerURL" value="tcp://localhost:61616"/>
+                <property name="userName" value="admin"/>
+                <property name="password" value="admin"/>
+            </bean>
+        </property>
     </bean>
 
     <bean id="memoryRepo" class="org.apache.camel.processor.idempotent.MemoryIdempotentRepository"/>
@@ -99,7 +105,7 @@
             <split>
                 <tokenize token="\n"/>
                 <to ref="csv2json"/>
-                <log message="!!!! MESSAGE TO BE PUBLISHED ON THE QUEUE"/>
+                <log message="!!!! MESSAGE TO BE PUBLISHED ON THE QUEUE" loggingLevel="DEBUG" logName="org.fuse.usecase" />
                 <to uri="amq-notx:{{queueOutput}}" id="output-queue-endpoint"/>
             </split>
         </route>
@@ -107,21 +113,15 @@
         <!-- Publish the error code and error message on a topic -->
         <route id="error-queue">
             <from uri="direct:error"/>
-            <log message="!!!! ERROR NOTIFICATION SEND"/>
-<!--            <idempotentConsumer messageIdRepositoryRef="memoryRepo" eager="false">
-                <header>error-code</header>
-                <log message="!!!! NOTIFICATION SEND"/>
-                <to uri="amq-notx:{{topicNotification}}"/>
-            </idempotentConsumer>-->
+            <log loggingLevel="DEBUG" logName="org.fuse.usecase" message="!!!! ERROR NOTIFICATION SEND"/>
             <to uri="amq-notx:{{topicNotification}}" id="error-queue-endpoint"/>
         </route>
 
         <!-- Consume the Topic message and publish it into the DB -->
         <route>
             <from uri="amq-notx:{{topicNotification}}?clientId=123&amp;durableSubscriptionName=notification"/>
-            <log message="!!!! NOTIFICATION RECEIVED"/>
-            <log loggingLevel="DEBUG" logName="org.fuse.usecase"
-                 message=">> Error code : ${header.error-code}, Error Message : ${header.error-message}"/>
+            <log message="!!!! NOTIFICATION RECEIVED" loggingLevel="DEBUG" logName="org.fuse.usecase"  />
+            <log message=">> Error code : ${header.error-code}, Error Message : ${header.error-message}" loggingLevel="DEBUG" logName="org.fuse.usecase"/>
             <to uri="sql:insert into USECASE.T_ERROR(ERROR_CODE,ERROR_MESSAGE,MESSAGE,STATUS)
                      values (:#${header.error-code}, :#${header.error-message}, :#${header.message}, 'ERROR');"/>
         </route>
