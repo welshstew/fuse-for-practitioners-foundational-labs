@@ -32,7 +32,7 @@
         <property name="password" value="admin"/>
         <property name="redeliveryPolicy">
             <bean class="org.apache.activemq.RedeliveryPolicy">
-                <property name="maximumRedeliveries" value="1"/>
+                <property name="maximumRedeliveries" value="0"/>
             </bean>
         </property>
     </bean>
@@ -100,7 +100,7 @@
                 <tokenize token="\n"/>
                 <to ref="csv2json"/>
                 <log message="!!!! MESSAGE TO BE PUBLISHED ON THE QUEUE"/>
-                <to uri="amq-tx:{{queueOutput}}"/>
+                <to uri="amq-notx:{{queueOutput}}" id="output-queue-endpoint"/>
             </split>
         </route>
 
