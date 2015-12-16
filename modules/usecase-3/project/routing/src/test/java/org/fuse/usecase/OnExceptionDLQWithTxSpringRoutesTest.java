@@ -4,6 +4,7 @@ import org.acme.Customer;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.builder.AdviceWithRouteBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jms.JmsComponent;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -13,6 +14,7 @@ import org.apache.camel.test.junit4.CamelTestSupport;
 import org.apache.camel.test.spring.CamelSpringTestSupport;
 import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import javax.jms.ConnectionFactory;
 import java.util.List;
@@ -26,47 +28,20 @@ public class OnExceptionDLQWithTxSpringRoutesTest extends CamelSpringTestSupport
             "MicroservicesVision,WA,true,Fred,Quicksand,202 Barney Blvd.,Rock City,MI,19728,100-400-2000\n" +
             "Error,,,EU,true,Fred,Quicksand,202 Barney Blvd.,Rock City,MI,19728,900-000-4545";
 
-    private final static String errorRecord = "Error,,,EU,true,Fred,Quicksand,202 Barney Blvd.,Rock City,MI,19728,900-000-4545";
-
-    private static final String componentName = "activemq";
-    private static String queueInputEndpoint = "activemq:input";
+    private String queueInputEndpoint = "amq-notx:usecase-input";
     private final String mockErrorEndpoint = "mock:error";
-
-    @Override
-    protected RouteBuilder createRouteBuilder() throws Exception {
-        return new RouteBuilder() {
-            @Override
-            public void configure() throws Exception {
-
-                DataFormat bindyDF = new BindyCsvDataFormat(Customer.class);
-
-                // we attempt to handle the exception and to send the message to our queue
-                onException(Exception.class)
-                   .handled(false)
-                   .setHeader("error-code").constant(111)
-                   .setHeader("error-message").simple("exception.message")
-                   .setBody().simple("${body}")
-                   .to("direct:error");
-
-                from(queueInputEndpoint)
-                   .split().tokenize("\n")
-                      .log("Incoming JMS message ${body}")
-                      .unmarshal(bindyDF)
-                      .log("Message marshalled : ${body}")
-                      .to("activemq:output");
-
-                from("activemq:output")
-                   .log("Message received ${body}");
-
-                from("direct:error")
-                   .log(">> Direct endpoint called")
-                   .to(mockErrorEndpoint);
-            }
-        };
-    }
 
     @Test
     public void shouldGetMessageWithinDLQ() throws Exception {
+
+        context.getRouteDefinitions().get(1).adviceWith(context, new AdviceWithRouteBuilder() {
+            @Override
+            public void configure() throws Exception {
+                weaveById("log-error-processor").after().to("mock:error");
+            }
+        });
+        context.start();
+
         template.sendBody(queueInputEndpoint, records);
 
         // Set the expectations for the Mock endpoint
@@ -81,26 +56,16 @@ public class OnExceptionDLQWithTxSpringRoutesTest extends CamelSpringTestSupport
         // We will verify that the header received correspond to our expectations
         List<Exchange> exchanges = mock.getExchanges();
         Message msg = exchanges.get(0).getIn();
-        assertEquals(111,msg.getHeader("error-code"));
+        assertEquals("111",msg.getHeader("error-code"));
         assertEquals("No position 11 defined for the field: 19728, line: 1 must be specified",msg.getHeader("error-message"));
 
-        String dlqBody = (String) consumer.receiveBody("activemq:ActiveMQ.DLQ", 2000);
-        assertEquals(records, dlqBody);
+        // Check if a message has been published on the DLQ
+        String result = (String) consumer.receiveBody("amq-notx:DLQ.usecase-input", 2000);
+        assertEquals(records, result);
     }
+
 
     @Override protected AbstractApplicationContext createApplicationContext() {
-        return null;
-    }
-
-    protected CamelContext createCamelContext() throws Exception {
-        CamelContext camelContext = super.createCamelContext();
-
-        // 3 redeliveries
-        ConnectionFactory connectionFactory = HelperTest.createConnectionFactory(null, 3);
-
-        /* With Tx Manager & Transacted = True */
-        JmsComponent component = jmsComponentTransacted(connectionFactory);
-        camelContext.addComponent(componentName, component);
-        return camelContext;
+        return new ClassPathXmlApplicationContext("META-INF/spring/local/activemq-broker.xml","META-INF/spring/camel-context.xml");
     }
 }

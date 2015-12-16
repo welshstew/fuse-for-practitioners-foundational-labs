@@ -74,37 +74,40 @@
             <json id="json" library="Jackson"/>
         </dataFormats>
 
+        <onException>
+            <exception>java.lang.IllegalArgumentException</exception>
+            <handled>
+                <constant>false</constant>
+            </handled>
+            <log message=">> Error took place. Message will be moved to DLQ"/>
+            <setHeader headerName="error-code">
+                <constant>111</constant>
+            </setHeader>
+            <setHeader headerName="error-message">
+                <simple>${exception.message}</simple>
+            </setHeader>
+            <setHeader headerName="message">
+                <simple>${body}</simple>
+            </setHeader>
+            <to uri="direct:error"/>
+        </onException>
+
         <!-- Route Definition -->
-        <route>
+        <route id="queue-split-transform-queue">
             <!-- Consume messages from queue -->
             <from uri="amq-tx:{{queueInput}}"/>
-            <onException>
-                <exception>java.lang.IllegalArgumentException</exception>
-                <log message=">> Error took place. Message will be moved to DLQ"/>
-<!--                <setHeader headerName="error-code">
-                    <constant>111</constant>
-                </setHeader>
-                <setHeader headerName="error-message">
-                    <simple>${exception.message}</simple>
-                </setHeader>
-                <setHeader headerName="message">
-                    <simple>${body}</simple>
-                </setHeader>
-                <to uri="direct:notify"/>-->
-            </onException>
             <split>
                 <tokenize token="\n"/>
                 <to ref="csv2json"/>
                 <log message="!!!! MESSAGE TO BE PUBLISHED ON THE QUEUE"/>
-                <to uri="amq-tx:{{queueOutput}}?transacted=true"/>
+                <to uri="amq-tx:{{queueOutput}}"/>
             </split>
         </route>
 
         <!-- Publish the error code and error message on a topic -->
-        <route>
-            <from uri="direct:notify"/>
-            <log message="!!!! NOTIFICATION SEND"/>
-            <to uri="amq-notx:{{topicNotification}}"/>
+        <route id="error-queue">
+            <from uri="direct:error"/>
+            <log message="!!!! ERROR NOTIFICATION SEND" id="log-error-processor"/>
 <!--            <idempotentConsumer messageIdRepositoryRef="memoryRepo" eager="false">
                 <header>error-code</header>
                 <log message="!!!! NOTIFICATION SEND"/>
