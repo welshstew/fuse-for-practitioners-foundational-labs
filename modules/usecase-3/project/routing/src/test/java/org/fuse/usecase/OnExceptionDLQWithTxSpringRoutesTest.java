@@ -48,10 +48,9 @@ public class OnExceptionDLQWithTxSpringRoutesTest extends CamelSpringTestSupport
     @Before @Override public void setUp() throws Exception {
 
         String HomeDir = System.getProperty("user.home");
-        String URL = "jdbc:h2:tcp://localhost" + HomeDir + "/usecaseDB";
+        String URL = "jdbc:h2:tcp://localhost:9093" + HomeDir + "/usecaseTestDB";
 
-        server = Server
-                .createTcpServer("-tcpPort", "9092", "-tcpAllowOthers", "-baseDir", HomeDir + "/usecaseDB")
+        server = Server.createTcpServer("-tcpPort", "9093", "-tcpAllowOthers", "-baseDir", HomeDir + "/usecaseTestDB")
                 .start();
 
         if (server.isRunning(true)) {
@@ -95,7 +94,7 @@ public class OnExceptionDLQWithTxSpringRoutesTest extends CamelSpringTestSupport
         }*/
 
         // We will extend the route of the error queue to add a mock endpoint
-        context.getRouteDefinition("error-queue").adviceWith(context, new AdviceWithRouteBuilder() {
+        context.getRouteDefinition("direct-error-queue").adviceWith(context, new AdviceWithRouteBuilder() {
             @Override public void configure() throws Exception {
                 weaveById("error-queue-endpoint").replace().to("mock:error");
             }
