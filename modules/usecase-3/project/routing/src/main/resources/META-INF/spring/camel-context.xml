@@ -58,8 +58,6 @@
         </property>
     </bean>
 
-    <bean id="memoryRepo" class="org.apache.camel.processor.idempotent.MemoryIdempotentRepository"/>
-
     <camelContext trace="false" xmlns="http://camel.apache.org/schema/spring">
 
         <propertyPlaceholder id="properties" location="fabric8/route.properties"/>
@@ -85,16 +83,7 @@
             <handled>
                 <constant>false</constant>
             </handled>
-            <log message=">> Error took place. Message will be moved to DLQ"/>
-            <setHeader headerName="error-code">
-                <constant>111</constant>
-            </setHeader>
-            <setHeader headerName="error-message">
-                <simple>${exception.message}</simple>
-            </setHeader>
-            <setHeader headerName="message">
-                <simple>${body}</simple>
-            </setHeader>
+            <log message=">> Error took place. Message will be moved to DLQ" loggingLevel="DEBUG" logName="org.fuse.usecase"/>
             <to uri="direct:error"/>
         </onException>
 
@@ -113,6 +102,15 @@
         <!-- Publish the error code and error message on a topic -->
         <route id="direct-error-queue">
             <from uri="direct:error"/>
+            <setHeader headerName="error-code">
+                <constant>111</constant>
+            </setHeader>
+            <setHeader headerName="error-message">
+                <simple>${exception.message}</simple>
+            </setHeader>
+            <setHeader headerName="message">
+                <simple>${body}</simple>
+            </setHeader>
             <log loggingLevel="DEBUG" logName="org.fuse.usecase" message="!!!! ERROR NOTIFICATION SEND"/>
             <to uri="amq-notx:{{topicNotification}}" id="error-queue-endpoint"/>
         </route>
