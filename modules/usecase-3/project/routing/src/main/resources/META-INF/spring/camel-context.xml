@@ -107,12 +107,13 @@
         <!-- Publish the error code and error message on a topic -->
         <route id="error-queue">
             <from uri="direct:error"/>
-            <log message="!!!! ERROR NOTIFICATION SEND" id="log-error-processor"/>
+            <log message="!!!! ERROR NOTIFICATION SEND"/>
 <!--            <idempotentConsumer messageIdRepositoryRef="memoryRepo" eager="false">
                 <header>error-code</header>
                 <log message="!!!! NOTIFICATION SEND"/>
                 <to uri="amq-notx:{{topicNotification}}"/>
             </idempotentConsumer>-->
+            <to uri="amq-notx:{{topicNotification}}" id="error-queue-endpoint"/>
         </route>
 
         <!-- Consume the Topic message and publish it into the DB -->
