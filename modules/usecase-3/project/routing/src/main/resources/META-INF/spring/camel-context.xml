@@ -111,14 +111,14 @@
         </route>
 
         <!-- Publish the error code and error message on a topic -->
-        <route id="error-queue">
+        <route id="direct-error-queue">
             <from uri="direct:error"/>
             <log loggingLevel="DEBUG" logName="org.fuse.usecase" message="!!!! ERROR NOTIFICATION SEND"/>
             <to uri="amq-notx:{{topicNotification}}" id="error-queue-endpoint"/>
         </route>
 
         <!-- Consume the Topic message and publish it into the DB -->
-        <route>
+        <route id="error-queue-sql">
             <from uri="amq-notx:{{topicNotification}}?clientId=123&amp;durableSubscriptionName=notification"/>
             <log message="!!!! NOTIFICATION RECEIVED" loggingLevel="DEBUG" logName="org.fuse.usecase"  />
             <log message=">> Error code : ${header.error-code}, Error Message : ${header.error-message}" loggingLevel="DEBUG" logName="org.fuse.usecase"/>
@@ -127,7 +127,7 @@
         </route>
 
         <!-- Inject correct record/message and update their status to CLOSE -->
-        <route>
+        <route id="sql-queue-input">
             <from uri="sql:select MESSAGE, ID from USECASE.T_ERROR where STATUS = 'FIXED' ?consumer.onConsume=update USECASE.T_ERROR set STATUS='CLOSE' where ID = :#ID"/>
             <setBody>
                 <simple>${body[message]}</simple>
