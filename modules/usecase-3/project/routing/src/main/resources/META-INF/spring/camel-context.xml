@@ -77,7 +77,7 @@
         <!-- Route Definition -->
         <route>
             <!-- Consume messages from queue -->
-            <from uri="amq-notx:{{queueInput}}?transacted=true"/>
+            <from uri="amq-tx:{{queueInput}}"/>
             <onException>
                 <exception>java.lang.IllegalArgumentException</exception>
                 <log message=">> Error took place. Message will be moved to DLQ"/>
@@ -96,7 +96,7 @@
                 <tokenize token="\n"/>
                 <to ref="csv2json"/>
                 <log message="!!!! MESSAGE TO BE PUBLISHED ON THE QUEUE"/>
-                <to uri="amq-notx:{{queueOutput}}"/>
+                <to uri="amq-tx:{{queueOutput}}?transacted=true"/>
             </split>
         </route>
 
