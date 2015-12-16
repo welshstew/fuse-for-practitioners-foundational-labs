@@ -81,16 +81,24 @@ Aggregate the responses received and take care about the transformation XML/JSon
 
 The purpose of this use case is to extend/revisit the use case 1 to publish the JSON messages into different queues instead of the folders outbox and error.
 For the erroneous messages, you will replace the DLQ folder with a DLQ queue and will develop a strategy to update/correct the erroneous messages
-and re inject these messages into the normal flow.
+and re inject these messages into the normal flow. A redelivery policy must be put in place to avoid that the client, through the connection factory
+, tries to redeliver the erroneous message.
 
-A notification/alert mechanism will also be developed to send a message into a topic
-to which a client is connected to be informed about the error reported for the faulty messages. The erroneous message and the message code
-received will be saved into a error table.
+A notification/alert mechanism must be developed to send a message to a topic containing the error code and error message. To be notified that there is an error,
+an interception strategy must be defined to check if there is an IllegalArgumentException generated. If this is case, an error code and the exception message will
+be added to the message that you will publish on a topic.
+A client is connected to this topic in order to be informed about the error reported when a faulty exception is thrown. The erroneous message and the message code
+received will be saved into an error table. Each record created will be managed with a status (ERROR, FIXED, CLOSE).
+According to the strategy that you have developed to correct the message, you will next resend/republish it to the queue consuming
+the input messages in order to process it if the status value is equal to FIXED. The messages consuled from the database will have finally their status updated to the value CLOSE.
 
-* Time estimated : 1h
+* Time estimated : 2h
 * How to evaluate the solution of the student :
-- Review the Apache Camel Route created to publish the erroneous messages into a DLQ queue
-- Challenge the startegy developed by the student to correct the messages and reinject them within the inbox folder
+- Review the Apache Camel Routes created to manage the messages into the queues (input, error and output)
+- Verify that the faulty message is not redelivered and well saved into the DLQ.usecase-inout queue
+- Challenge the strategy developed by the student to correct the messages and reinject them within the input queue
+- Review the JMS/ActiveMQ components, how they are configured to access the Broker
+- Control that JMS TxManager is used
 
 == Use Case 4 : xxxx
 
