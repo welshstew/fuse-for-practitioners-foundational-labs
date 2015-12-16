@@ -90,12 +90,13 @@ public class OnExceptionDLQWithTxSpringRoutesTest extends CamelSpringTestSupport
 
         context.start();
 
+        // Send the records (= what we have within the customers.csv file) to the input-usecase queue
         template.sendBody(queueInputEndpoint, records);
 
         // Set the expectations for the Mock endpoint
         MockEndpoint mockError = getMockEndpoint(mockErrorEndpoint);
         MockEndpoint mockOutput = getMockEndpoint(mockOutputEndpoint);
-        // We should get an error message
+        // We should get an error message as the 4rd CSV record is erroneous and can't be processed by bindy.
         mockError.expectedMessageCount(1);
 
         mockError.assertIsSatisfied();
@@ -103,14 +104,14 @@ public class OnExceptionDLQWithTxSpringRoutesTest extends CamelSpringTestSupport
 
         assertEquals(1, mockError.getExpectedCount());
 
-        // We will verify that the header received correspond to our expectations
+        // We verify that the headers received correspond to our expectations
         List<Exchange> exchanges = mockError.getExchanges();
         Message msg = exchanges.get(0).getIn();
         assertEquals("111", msg.getHeader("error-code"));
         assertEquals("No position 11 defined for the field: 19728, line: 1 must be specified",
                 msg.getHeader("error-message"));
 
-        // 3 messages should be received
+        // 3 messages should be received from the output-usecase queue
         exchanges = mockOutput.getExchanges();
         assertEquals(3, exchanges.size());
         int i = 0;
