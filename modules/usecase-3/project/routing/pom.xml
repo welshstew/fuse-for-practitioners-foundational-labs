@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>parent</artifactId>
-        <groupId>org.fuse.usecase1</groupId>
+        <groupId>org.fuse.usecase3</groupId>
         <version>1.0</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
-    <name>Fuse :: Use Case 1 :: Routing</name>
+    <name>Fuse :: Use Case 3 :: Routing</name>
     <artifactId>routing</artifactId>
     <packaging>bundle</packaging>
 
@@ -26,17 +26,19 @@
             org.apache.camel.impl;version="[2.0,3.0)",
             org.apache.camel.spi;version="[2.0,3.0)",
             org.apache.camel.component.dozer;version="[2.0,3.0)",
+            org.h2,
             *
         </osgi-import-package>
         <osgi-export-package>
             org.acme,org.globex
         </osgi-export-package>
-        <osgi-dynamic-package></osgi-dynamic-package>
+        <osgi-dynamic-package>*</osgi-dynamic-package>
+        <osgi-require-bundle>org.apache.activemq.activemq-osgi</osgi-require-bundle>
 
-        <fabric8.profile>fuse-usecase1</fabric8.profile>
+        <fabric8.profile>fuse-usecase3</fabric8.profile>
         <fabric8.parentProfiles>feature-camel</fabric8.parentProfiles>
         <fabric8.features>camel-spring camel-dozer camel-jackson camel-bindy</fabric8.features>
-        <fabric8.bundle>mvn:org.fuse.usecase1/routing/1.0</fabric8.bundle>
+        <fabric8.bundle>mvn:org.fuse.usecase3/routing/1.0</fabric8.bundle>
         <fabric8.profileConfigDir>src/main/resources/fabric8</fabric8.profileConfigDir>
     </properties>
 
@@ -55,6 +57,18 @@
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
+            <artifactId>camel-sql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-camel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-jms</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
             <artifactId>camel-jackson</artifactId>
         </dependency>
         <dependency>
@@ -64,6 +78,32 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <!-- ActiveMQ -->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-broker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-jaas</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-kahadb-store</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xbean</groupId>
+            <artifactId>xbean-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
         </dependency>
 
         <!-- logging -->
@@ -78,6 +118,13 @@
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
+        </dependency>
+
+        <!-- DB -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.190</version>
         </dependency>
 
         <!-- Testing -->
@@ -101,7 +148,7 @@
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-maven-plugin</artifactId>
                 <configuration>
-                    <applicationContextUri>META-INF/spring/camel-context.xml</applicationContextUri>
+                    <applicationContextUri>META-INF/spring/*.xml;META-INF/spring/local/*.xml</applicationContextUri>
                 </configuration>
             </plugin>
 

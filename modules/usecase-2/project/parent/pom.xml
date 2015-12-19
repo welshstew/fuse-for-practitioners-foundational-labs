@@ -19,6 +19,7 @@
 
         <!-- Versions should be the same as defined within the Fuse BOM -->
         <camel.version>2.15.1.redhat-621084</camel.version>
+        <cxf.version>2.15.1.redhat-621084</cxf.version>
 
         <!-- Apache Maven plugins -->
         <build-helper-maven-plugin.version>1.9.1</build-helper-maven-plugin.version>
@@ -121,6 +122,11 @@
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>${build-helper-maven-plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -177,7 +183,7 @@
         </repository>
         <repository>
             <id>Tech Preview</id>
-            <url>https://maven.repository.redhat.com/techpreview/all/</url>
+            <url>http://maven.repository.redhat.com/techpreview/all</url>
         </repository>
     </repositories>
     <pluginRepositories>
@@ -202,7 +208,7 @@
         </pluginRepository>
         <pluginRepository>
             <id>Tech Preview</id>
-            <url>https://maven.repository.redhat.com/techpreview/all/</url>
+            <url>http://maven.repository.redhat.com/techpreview/all</url>
         </pluginRepository>
     </pluginRepositories>
 </project>

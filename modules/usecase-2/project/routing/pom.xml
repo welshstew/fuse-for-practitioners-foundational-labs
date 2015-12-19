@@ -16,16 +16,18 @@
 
     <properties>
         <osgi-private-package>
-            org.fuses.usecase.routing;version="1.0"
+            org.fuse.usecase,
+            org.fuse.usecase.service,
+            org.fuse.usecase.routing
         </osgi-private-package>
         <osgi-import-package>
-            !org.fuses.usecase.routing;version="1.0",
             org.apache.camel;version="[2.0,3.0)",
             org.apache.camel.builder;version="[2.0,3.0)",
             org.apache.camel.model;version="[2.0,3.0)",
             org.apache.camel.impl;version="[2.0,3.0)",
             org.apache.camel.spi;version="[2.0,3.0)",
             org.apache.camel.component.dozer;version="[2.0,3.0)",
+            org.h2,
             *
         </osgi-import-package>
         <osgi-export-package>
@@ -33,10 +35,10 @@
         </osgi-export-package>
         <osgi-dynamic-package></osgi-dynamic-package>
 
-        <fabric8.profile>fuse-usecase1</fabric8.profile>
+        <fabric8.profile>fuse-usecase2</fabric8.profile>
         <fabric8.parentProfiles>feature-camel</fabric8.parentProfiles>
         <fabric8.features>camel-spring camel-dozer camel-jackson camel-bindy camel-cxf camel-sql</fabric8.features>
-        <fabric8.bundle>mvn:org.fuse.usecase/routing/1.0</fabric8.bundle>
+        <fabric8.bundle>mvn:org.fuse.usecase2/routing/1.0</fabric8.bundle>
         <fabric8.profileConfigDir>src/main/resources/fabric8</fabric8.profileConfigDir>
     </properties>
 
@@ -59,11 +61,38 @@
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
+            <artifactId>camel-http4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
             <artifactId>camel-cxf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-sql</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http-jetty</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-extension-providers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-client</artifactId>
+        </dependency>
+        <!-- Required for org.apache.cxf.jaxrs.provider.json.JSONProvider -->
+        <dependency>
+            <groupId>org.codehaus.jettison</groupId>
+            <artifactId>jettison</artifactId>
+        </dependency>
+        <!-- Required for com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
+            <version>2.4.3</version>
         </dependency>
 
         <dependency>
@@ -77,6 +106,13 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <!-- DB -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.190</version>
         </dependency>
 
         <!-- logging -->
@@ -114,7 +150,7 @@
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-maven-plugin</artifactId>
                 <configuration>
-                    <applicationContextUri>META-INF/spring/camel-context.xml</applicationContextUri>
+                    <applicationContextUri>META-INF/spring/*.xml</applicationContextUri>
                 </configuration>
             </plugin>
 
@@ -160,6 +196,25 @@
                                 </artifact>
                             </artifacts>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-java2ws-plugin</artifactId>
+                <version>3.0.4</version>
+                <executions>
+                    <execution>
+                        <id>process-classes</id>
+                        <phase>process-classes</phase>
+                        <configuration>
+                            <className>org.fuse.usecase.service.CustomerWS</className>
+                            <genWsdl>true</genWsdl>
+                            <verbose>true</verbose>
+                        </configuration>
+                        <goals>
+                            <goal>java2ws</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
