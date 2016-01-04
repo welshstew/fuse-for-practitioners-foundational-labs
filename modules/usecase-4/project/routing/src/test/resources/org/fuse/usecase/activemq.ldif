@@ -42,7 +42,8 @@ cn: mqbroker
 objectClass: organizationalRole
 objectClass: top
 objectClass: simpleSecurityObject
-userPassword: {SSHA}YvMAkkd66cDecNoejo8jnw5uUUBziyl0
+# userPassword: {SSHA}YvMAkkd66cDecNoejo8jnw5uUUBziyl0
+userPassword: {SSHA}5en6G6MezRroT3XKqkdPOmY/BfQ=
 description: Bind user for MQ broker
 
 
@@ -81,7 +82,8 @@ ou: User
 
 dn: uid=admin,ou=User,ou=ActiveMQ,ou=system
 uid: admin
-userPassword: {SSHA}YvMAkkd66cDecNoejo8jnw5uUUBziyl0
+# userPassword: {SSHA}YvMAkkd66cDecNoejo8jnw5uUUBziyl0
+userPassword: {SSHA}5en6G6MezRroT3XKqkdPOmY/BfQ=
 objectClass: account
 objectClass: simpleSecurityObject
 objectClass: top
@@ -89,7 +91,10 @@ objectClass: top
 
 dn: uid=jdoe,ou=User,ou=ActiveMQ,ou=system
 uid: jdoe
-userPassword: {SSHA}YvMAkkd66cDecNoejo8jnw5uUUBziyl0
+# sunflower password
+# userPassword: {SSHA}YvMAkkd66cDecNoejo8jnw5uUUBziyl0
+# secret password
+userPassword: {SSHA}5en6G6MezRroT3XKqkdPOmY/BfQ=
 objectclass: inetOrgPerson
 objectclass: organizationalPerson
 objectclass: person

@@ -7,37 +7,24 @@ import org.apache.directory.ldap.client.api.LdapConnection;
 import org.apache.directory.ldap.client.api.message.SearchResultEntry;
 import org.apache.directory.server.annotations.CreateLdapServer;
 import org.apache.directory.server.annotations.CreateTransport;
-import org.apache.directory.server.constants.ServerDNConstants;
-import org.apache.directory.server.core.DirectoryService;
 import org.apache.directory.server.core.annotations.ApplyLdifFiles;
-import org.apache.directory.server.core.factory.DSAnnotationProcessor;
 import org.apache.directory.server.core.integ.AbstractLdapTestUnit;
 import org.apache.directory.server.core.integ.FrameworkRunner;
-import org.apache.directory.server.factory.ServerAnnotationProcessor;
 import org.apache.directory.server.ldap.LdapServer;
 import org.apache.directory.shared.ldap.entry.Entry;
-import org.apache.directory.shared.ldap.jndi.JndiUtils;
-import org.apache.directory.shared.ldap.util.ArrayUtils;
-import org.apache.directory.shared.ldap.util.StringTools;
+import org.apache.directory.shared.ldap.entry.EntryAttribute;
+import org.apache.directory.shared.ldap.util.Base64;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.jms.*;
-import javax.naming.Context;
-import javax.naming.NamingEnumeration;
-import javax.naming.directory.SearchControls;
-import javax.naming.directory.SearchResult;
-import javax.naming.ldap.InitialLdapContext;
-import javax.naming.ldap.LdapContext;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
-import java.util.Hashtable;
-
-import static org.apache.directory.server.integ.ServerIntegrationUtils.getWiredContext;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(FrameworkRunner.class)
 @CreateLdapServer(transports = {
@@ -48,10 +35,8 @@ public class LDAPAuthenticationTest extends AbstractLdapTestUnit {
     public BrokerService broker;
     public static LdapServer ldapServer;
 
-/*    @Before
+    @Before
     public void setup() throws Exception {
-        //System.setProperty("ldapPort", String.valueOf(1024));
-        //System.setProperty("java.security.auth.login.config","login.config");
         broker = BrokerFactory.createBroker("xbean:org/fuse/usecase/activemq-broker.xml");
         broker.start();
         broker.waitUntilStarted();
@@ -61,14 +46,8 @@ public class LDAPAuthenticationTest extends AbstractLdapTestUnit {
     public void shutdown() throws Exception {
         broker.stop();
         broker.waitUntilStopped();
-    }*/
+    }
 
-    /**
-     * Checks all attributes of the admin account entry minus the userPassword
-     * attribute.
-     *
-     * @param entry the entries attributes
-     */
     protected void performAdminAccountChecks(Entry entry) {
         assertTrue(entry.get("objectClass").contains("top"));
         assertTrue(entry.get("objectClass").contains("person"));
@@ -84,31 +63,23 @@ public class LDAPAuthenticationTest extends AbstractLdapTestUnit {
         connection.bind(userDn, "secret");
 
         Entry entry = ((SearchResultEntry) connection.lookup(userDn)).getEntry();
-        performAdminAccountChecks(entry);
-        assertTrue(ArrayUtils
-                .isEquals(entry.get("userPassword").get().getBytes(), StringTools.getBytesUtf8("secret")));
+        // performAdminAccountChecks(entry);
+        EntryAttribute attrPwd = entry.get("userPassword");
+        String ldapPwd = attrPwd.get().getString();
+        String pwdHashed = hashSSHAPassword("secret");
+
+        assertEquals(ldapPwd,pwdHashed);
         connection.close();
     }
 
-
-    /*        // Try to read an entry in the server
-        Hashtable<String, String> env = new Hashtable<String, String>();
-        env.put( Context.INITIAL_CONTEXT_FACTORY, CTX_FACTORY );
-        env.put( Context.PROVIDER_URL, "ldap://localhost:" + ldapServer.getPort() );
-        env.put( Context.SECURITY_PRINCIPAL, ServerDNConstants.ADMIN_SYSTEM_DN );
-        env.put( Context.SECURITY_CREDENTIALS, "secret" );
-        env.put( Context.SECURITY_AUTHENTICATION, "simple" );
-        LdapContext ctx = new InitialLdapContext( env, null );*/
-
-
-/*    @Test
+    @Test
     public void testSucceed() throws Exception {
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://localhost:61616");
-        Connection conn = factory.createQueueConnection("admin", "secret");
+        Connection conn = factory.createQueueConnection("jdoe", "secret");
         try {
             Session sess = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
             conn.start();
-            Queue queue = sess.createTemporaryQueue();
+            Queue queue = sess.createQueue("ADMIN.FOO");
 
             MessageProducer producer = sess.createProducer(queue);
             MessageConsumer consumer = sess.createConsumer(queue);
@@ -120,5 +91,13 @@ public class LDAPAuthenticationTest extends AbstractLdapTestUnit {
             e.printStackTrace();
             return;
         }
-    }*/
+    }
+
+    String hashSSHAPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-1");
+        digest.update(password.getBytes("UTF8"));
+        byte[] pwdDigested = digest.digest();
+        char[] sshaPassword = Base64.encode(pwdDigested);
+        return "{SSHA}" + String.valueOf(sshaPassword);
+    }
 }
