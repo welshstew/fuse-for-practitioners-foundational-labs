@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
 @CreateLdapServer(transports = {
     @CreateTransport(protocol = "LDAP", port = 1024) })
 @ApplyLdifFiles("org/fuse/usecase/activemq.ldif")
-public class LDAPAuthenticationTest extends AbstractLdapTestUnit {
+public class LDAPActiveMQTest extends AbstractLdapTestUnit {
 
     public BrokerService broker;
     public static LdapServer ldapServer;
@@ -57,25 +57,9 @@ public class LDAPAuthenticationTest extends AbstractLdapTestUnit {
     }
 
     @Test
-    public void testSearchAllAttrs() throws Exception {
-        String userDn = "uid=admin,ou=User,ou=ActiveMQ,ou=system";
-        LdapConnection connection = new LdapConnection("127.0.0.1", ldapServer.getPort());
-        connection.bind(userDn, "secret");
-
-        Entry entry = ((SearchResultEntry) connection.lookup(userDn)).getEntry();
-        // performAdminAccountChecks(entry);
-        EntryAttribute attrPwd = entry.get("userPassword");
-        String ldapPwd = attrPwd.get().getString();
-        String pwdHashed = hashSSHAPassword("secret");
-
-        assertEquals(ldapPwd,pwdHashed);
-        connection.close();
-    }
-
-    @Test
     public void testSucceed() throws Exception {
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://localhost:61616");
-        Connection conn = factory.createQueueConnection("jdoe", "secret");
+        Connection conn = factory.createQueueConnection("admin", "secret");
         try {
             Session sess = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
             conn.start();
@@ -93,11 +77,4 @@ public class LDAPAuthenticationTest extends AbstractLdapTestUnit {
         }
     }
 
-    String hashSSHAPassword(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-1");
-        digest.update(password.getBytes("UTF8"));
-        byte[] pwdDigested = digest.digest();
-        char[] sshaPassword = Base64.encode(pwdDigested);
-        return "{SSHA}" + String.valueOf(sshaPassword);
-    }
 }

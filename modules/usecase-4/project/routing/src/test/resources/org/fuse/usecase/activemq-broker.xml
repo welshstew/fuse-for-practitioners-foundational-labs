@@ -10,10 +10,6 @@
     <!-- ActiveMQ Broker -->
     <broker brokerName="demo" xmlns="http://activemq.apache.org/schema/core">
 
-        <destinations>
-            <queue physicalName="ADMIN.FOO" />
-        </destinations>
-
         <destinationPolicy>
             <policyMap>
                 <policyEntries>
@@ -27,24 +23,36 @@
         </destinationPolicy>
 
         <plugins>
-            <!--
-            <simpleAuthenticationPlugin>
-                <users>
-                    <authenticationUser username="jdoe" password="sunflower"
-                                        groups="users"/>
-                    <authenticationUser username="admin" password="sunflower"
-                                        groups="admin"/>
-                </users>
-            </simpleAuthenticationPlugin>
-            -->
-
-        <jaasAuthenticationPlugin configuration="LDAPLogin" />
-            <!--
+            <jaasAuthenticationPlugin configuration="LDAPLogin"/>
             <authorizationPlugin>
                 <map>
-                    <cachedLDAPAuthorizationMap/>
+                    <bean id="lDAPAuthorizationMap" class="org.apache.activemq.security.LDAPAuthorizationMap"
+                          xmlns="http://www.springframework.org/schema/beans">
+                        <property name="initialContextFactory" value="com.sun.jndi.ldap.LdapCtxFactory"/>
+                        <property name="connectionURL" value="ldap://localhost:1024"/>
+                        <property name="authentication" value="simple"/>
+                        <property name="connectionUsername" value="uid=admin,ou=system"/>
+                        <property name="connectionPassword" value="secret"/>
+                        <property name="connectionProtocol" value="s"/>
+                        <property name="topicSearchMatchingFormat"
+                                  value="cn={0},ou=Topic,ou=Destination,ou=ActiveMQ,ou=system"/>
+                        <property name="topicSearchSubtreeBool" value="true"/>
+                        <property name="queueSearchMatchingFormat"
+                                  value="cn={0},ou=Queue,ou=Destination,ou=ActiveMQ,ou=system"/>
+                        <property name="advisorySearchBase"
+                                  value="cn=ActiveMQ.Advisory,ou=Topic,ou=Destination,ou=ActiveMQ,ou=system"/>
+                        <property name="tempSearchBase"
+                                  value="cn=ActiveMQ.Temp,ou=Topic,ou=Destination,ou=ActiveMQ,ou=system"/>
+                        <property name="queueSearchSubtreeBool" value="true"/>
+                        <property name="adminBase" value="(cn=admin)"/>
+                        <property name="adminAttribute" value="member"/>
+                        <property name="readBase" value="(cn=read)"/>
+                        <property name="readAttribute" value="member"/>
+                        <property name="writeBase" value="(cn=write)"/>
+                        <property name="writeAttribute" value="member"/>
+                    </bean>
                 </map>
-            </authorizationPlugin>-->
+            </authorizationPlugin>
         </plugins>
 
         <transportConnectors>

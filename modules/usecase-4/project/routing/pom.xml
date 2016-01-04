@@ -267,7 +267,8 @@
                         <version>2.19</version>
                         <configuration>
                             <includes>
-                                <include>LDAPAuthenticationTest.java</include>
+                                <include>LDAPActiveMQTest.java</include>
+                                <include>LDAPCheckPasswordTest.java</include>
                             </includes>
                         </configuration>
                     </plugin>
