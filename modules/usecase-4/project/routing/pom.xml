@@ -122,29 +122,6 @@
             <artifactId>spring-security-config</artifactId>
         </dependency>
 
-        <!-- ApacheDS
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-core-entry</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-protocol-ldap</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-protocol-shared</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-server-jndi</artifactId>
-        </dependency>
-        -->
-
         <!-- logging -->
         <!-- We must downgrade slf4j as org.apache.commons.logging.impl.SLF4JLocationAwareLog reports this error
             SLF4J: The requested version 1.6.99 by your slf4j binding is not compatible with [1.5.5, 1.5.6, 1.5.7, 1.5.8, 1.5.9, 1.5.10]
@@ -248,11 +225,6 @@
         <profile>
             <id>ds-test</id>
             <dependencies>
-<!--                <dependency>
-                    <groupId>org.apache.directory.server</groupId>
-                    <artifactId>apacheds-all</artifactId>
-                    <scope>test</scope>
-                </dependency>-->
                 <dependency>
                     <groupId>org.apache.directory.server</groupId>
                     <artifactId>apacheds-server-integ</artifactId>
@@ -284,6 +256,64 @@
                     <version>0.1</version>
                 </dependency>
             </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.19</version>
+                        <configuration>
+                            <includes>
+                                <include>LDAPAuthenticationTest.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>camel-ldap-test</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.directory.server</groupId>
+                    <artifactId>apacheds-core</artifactId>
+                    <version>1.5.5</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.directory.server</groupId>
+                    <artifactId>apacheds-core-entry</artifactId>
+                    <version>1.5.5</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.directory.server</groupId>
+                    <artifactId>apacheds-protocol-ldap</artifactId>
+                    <version>1.5.5</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.directory.server</groupId>
+                    <artifactId>apacheds-protocol-shared</artifactId>
+                    <version>1.5.5</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.directory.server</groupId>
+                    <artifactId>apacheds-server-jndi</artifactId>
+                    <version>1.5.5</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.19</version>
+                        <configuration>
+                            <includes>
+                                <include>LDAPCamelTest.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
