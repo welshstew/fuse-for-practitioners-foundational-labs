@@ -1,15 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:amq="http://activemq.apache.org/schema/core"
+       xmlns:security="http://www.springframework.org/schema/security"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://activemq.apache.org/schema/core
-       http://activemq.apache.org/schema/core/activemq-core.xsd">
+       http://activemq.apache.org/schema/core/activemq-core.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- Embedded LDAP Server launched by Spring
+    <security:ldap-server root="dc=acme,dc=com" ldif="classpath:activemq.ldif" />
+    -->
+    <!--
+     TO BE USED FOR CAMEL
+    <bean id="ldapserver" class="javax.naming.directory.InitialDirContext">
+        <constructor-arg>
+            <props>
+                <prop key="java.naming.factory.initial">com.sun.jndi.ldap.LdapCtxFactory</prop>
+                <prop key="java.naming.provider.url">ldap://127.0.0.1:33389</prop>
+                <prop key="java.naming.security.authentication">simple</prop>
+                <prop key="java.naming.security.principal">cn=mqbroker,ou=Services,ou=system,dc=acme,dc=com</prop>
+                <prop key="java.naming.security.credentials">secret</prop>
+            </props>
+        </constructor-arg>
+    </bean>-->
 
     <!-- ActiveMQ Broker -->
     <broker brokerName="demo" xmlns="http://activemq.apache.org/schema/core">
+
+        <destinations>
+            <queue physicalName="ADMIN.FOO" />
+        </destinations>
 
         <destinationPolicy>
             <policyMap>
@@ -24,11 +47,7 @@
         </destinationPolicy>
 
         <plugins>
-            <simpleAuthenticationPlugin>
-                <users>
-                    <authenticationUser username="admin" password="admin" groups="users,admins"/>
-                </users>
-            </simpleAuthenticationPlugin>
+            <jaasAuthenticationPlugin configuration="LdapConfiguration"/>
         </plugins>
 
         <transportConnectors>
