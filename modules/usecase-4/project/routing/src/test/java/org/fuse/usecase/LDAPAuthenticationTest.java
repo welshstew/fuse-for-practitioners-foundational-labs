@@ -85,6 +85,8 @@ public class LDAPAuthenticationTest extends AbstractLdapTestUnit {
 
         Entry entry = ((SearchResultEntry) connection.lookup(userDn)).getEntry();
         performAdminAccountChecks(entry);
+        assertTrue(ArrayUtils
+                .isEquals(entry.get("userPassword").get().getBytes(), StringTools.getBytesUtf8("secret")));
         connection.close();
     }
 
