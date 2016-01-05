@@ -10,28 +10,20 @@
        http://www.springframework.org/schema/security
        http://www.springframework.org/schema/security/spring-security.xsd">
 
-    <!-- Embedded LDAP Server launched by Spring
-    <security:ldap-server root="dc=acme,dc=com" ldif="classpath:activemq.ldif" />
+    <!-- Embedded Apache DS - LDAP Server launched by Spring
+    <security:ldap-server
+            manager-dn="uid=admin,ou=User,ou=ActiveMQ,ou=system"
+            manager-password="sunflower"
+            ldif="classpath:org/fuse/usecase/activemq.ldif"/>
     -->
-    <!--
-     TO BE USED FOR CAMEL
-    <bean id="ldapserver" class="javax.naming.directory.InitialDirContext">
-        <constructor-arg>
-            <props>
-                <prop key="java.naming.factory.initial">com.sun.jndi.ldap.LdapCtxFactory</prop>
-                <prop key="java.naming.provider.url">ldap://127.0.0.1:33389</prop>
-                <prop key="java.naming.security.authentication">simple</prop>
-                <prop key="java.naming.security.principal">cn=mqbroker,ou=Services,ou=system,dc=acme,dc=com</prop>
-                <prop key="java.naming.security.credentials">secret</prop>
-            </props>
-        </constructor-arg>
-    </bean>-->
+
+    <bean id="ldapEmbedded" class="org.fuse.usecase.EmbedLDAPServer" init-method="init"/>
 
     <!-- ActiveMQ Broker -->
     <broker brokerName="demo" xmlns="http://activemq.apache.org/schema/core">
 
         <destinations>
-            <queue physicalName="ADMIN.FOO" />
+            <queue physicalName="ADMIN.FOO"/>
         </destinations>
 
         <destinationPolicy>
@@ -47,7 +39,21 @@
         </destinationPolicy>
 
         <plugins>
-            <jaasAuthenticationPlugin configuration="LdapConfiguration"/>
+            <jaasAuthenticationPlugin configuration="LDAPLogin"/>
+            <authorizationPlugin>
+                <map>
+                    <cachedLDAPAuthorizationMap
+                            connectionURL="ldap://localhost:33389"
+                            queueSearchBase="ou=Queue,ou=Destination,ou=ActiveMQ,ou=system"
+                            topicSearchBase="ou=Topic,ou=Destination,ou=ActiveMQ,ou=system"
+                            tempSearchBase="ou=Temp,ou=Destination,ou=ActiveMQ,ou=system"
+                            adminPermissionGroupSearchFilter="(cn=admin)"
+                            writePermissionGroupSearchFilter="(cn=write)"
+                            readPermissionGroupSearchFilter="(cn=read)"
+                            legacyGroupMapping="true"
+                    />
+                </map>
+            </authorizationPlugin>
         </plugins>
 
         <transportConnectors>

@@ -76,7 +76,6 @@
             <artifactId>camel-ldap</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
@@ -120,6 +119,45 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
+        </dependency>
+
+        <!-- Apache DS -->
+        <dependency>
+            <groupId>org.apache.directory.server</groupId>
+            <artifactId>apacheds-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.directory.server</groupId>
+            <artifactId>apacheds-core-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.directory.server</groupId>
+            <artifactId>apacheds-core-annotations</artifactId>
+        </dependency>
+<!--        <dependency>
+            <groupId>org.apache.directory.server</groupId>
+            <artifactId>apacheds-core-entry</artifactId>
+        </dependency>-->
+        <dependency>
+            <groupId>org.apache.directory.server</groupId>
+            <artifactId>apacheds-protocol-ldap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.directory.server</groupId>
+            <artifactId>apacheds-protocol-shared</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.directory.server</groupId>
+            <artifactId>apacheds-server-jndi</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.directory.shared</groupId>
+            <artifactId>shared-ldap-codec-standalone</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.directory.jdbm</groupId>
+            <artifactId>apacheds-jdbm2</artifactId>
         </dependency>
 
         <!-- logging -->
@@ -220,52 +258,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>camel-ldap-test</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.directory.server</groupId>
-                    <artifactId>apacheds-core</artifactId>
-                    <version>1.5.5</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.directory.server</groupId>
-                    <artifactId>apacheds-core-entry</artifactId>
-                    <version>1.5.5</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.directory.server</groupId>
-                    <artifactId>apacheds-protocol-ldap</artifactId>
-                    <version>1.5.5</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.directory.server</groupId>
-                    <artifactId>apacheds-protocol-shared</artifactId>
-                    <version>1.5.5</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.directory.server</groupId>
-                    <artifactId>apacheds-server-jndi</artifactId>
-                    <version>1.5.5</version>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.19</version>
-                        <configuration>
-                            <includes>
-                                <include>LDAPCamelTest.java</include>
-                            </includes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>
