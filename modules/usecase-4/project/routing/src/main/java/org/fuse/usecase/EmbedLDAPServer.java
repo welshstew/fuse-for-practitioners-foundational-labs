@@ -7,6 +7,7 @@ import org.apache.directory.server.core.factory.DirectoryServiceFactory;
 //import org.apache.directory.server.core.partition.Partition;
 //import org.apache.directory.server.core.partition.impl.btree.jdbm.JdbmPartition;
 import org.apache.directory.server.core.partition.impl.avl.AvlPartition;
+import org.apache.directory.server.core.partition.impl.btree.jdbm.JdbmPartition;
 import org.apache.directory.server.ldap.LdapServer;
 import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
 import org.apache.directory.server.protocol.shared.transport.TcpTransport;
@@ -45,11 +46,12 @@ public class EmbedLDAPServer {
         lService.getChangeLog().setEnabled(false);
         lService.setShutdownHookEnabled(true);
 
-/*        Partition lPartition = new AvlPartition(lService.getSchemaManager());
-        lPartition.setId("demo");
-        lPartition.setSuffixDn(new Dn(lService.getSchemaManager(), "ou=ActiveMQ,ou=system"));
-        lPartition.initialize();
-        lService.addPartition(lPartition);*/
+        /* DOES NOT WORK - NOT SURE THAT WE NEED IT
+        JdbmPartition partition = new JdbmPartition(lService.getSchemaManager());
+        partition.setId("ActiveMQ");
+        partition.setSuffixDn(new Dn("ou=ActiveMQ,ou=system"));
+        lService.addPartition(partition);
+        */
 
         LdapServer lServer = new LdapServer();
         lServer.setTransports(new TcpTransport("localhost", 33389));

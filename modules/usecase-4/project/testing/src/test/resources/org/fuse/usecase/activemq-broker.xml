@@ -20,6 +20,7 @@
                             topicSearchBase="ou=Topic,ou=Destination,ou=ActiveMQ,ou=system"
                             tempSearchBase="ou=Temp,ou=Destination,ou=ActiveMQ,ou=system"
                             legacyGroupMapping="true"
+                            refreshInterval="5000"
                     />
                     <!--
                         connectionURL="ldap://localhost:1024"
