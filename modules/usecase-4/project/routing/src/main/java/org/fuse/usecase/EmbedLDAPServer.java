@@ -1,13 +1,16 @@
 package org.fuse.usecase;
 
 import org.apache.directory.server.core.api.DirectoryService;
+import org.apache.directory.server.core.api.partition.Partition;
 import org.apache.directory.server.core.factory.DefaultDirectoryServiceFactory;
 import org.apache.directory.server.core.factory.DirectoryServiceFactory;
 //import org.apache.directory.server.core.partition.Partition;
 //import org.apache.directory.server.core.partition.impl.btree.jdbm.JdbmPartition;
+import org.apache.directory.server.core.partition.impl.avl.AvlPartition;
 import org.apache.directory.server.ldap.LdapServer;
 import org.apache.directory.server.protocol.shared.store.LdifFileLoader;
 import org.apache.directory.server.protocol.shared.transport.TcpTransport;
+import org.apache.directory.shared.ldap.model.name.Dn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +44,12 @@ public class EmbedLDAPServer {
         DirectoryService lService = lFactory.getDirectoryService();
         lService.getChangeLog().setEnabled(false);
         lService.setShutdownHookEnabled(true);
+
+/*        Partition lPartition = new AvlPartition(lService.getSchemaManager());
+        lPartition.setId("demo");
+        lPartition.setSuffixDn(new Dn(lService.getSchemaManager(), "ou=ActiveMQ,ou=system"));
+        lPartition.initialize();
+        lService.addPartition(lPartition);*/
 
         LdapServer lServer = new LdapServer();
         lServer.setTransports(new TcpTransport("localhost", 33389));
