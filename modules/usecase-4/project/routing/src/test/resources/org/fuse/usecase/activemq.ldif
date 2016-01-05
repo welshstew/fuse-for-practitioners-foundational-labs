@@ -187,27 +187,27 @@ member: cn=admins
 ## Define advisories ##
 #######################
 
-dn: cn=ActiveMQ.Advisory,ou=Topic,ou=Destination,ou=ActiveMQ,ou=system
-cn: ActiveMQ.Advisory
+dn: cn=ActiveMQ.Advisory.$,ou=Topic,ou=Destination,ou=ActiveMQ,ou=system
+cn: ActiveMQ.Advisory.$
 objectClass: applicationProcess
 objectClass: top
 description: Advisory topics
 
-dn: cn=read,cn=ActiveMQ.Advisory,ou=Topic,ou=Destination,ou=ActiveMQ,ou=system
+dn: cn=read,cn=ActiveMQ.Advisory.$,ou=Topic,ou=Destination,ou=ActiveMQ,ou=system
 cn: read
 member: cn=admins
 member: cn=users
 objectClass: groupOfNames
 objectClass: top
 
-dn: cn=write,cn=ActiveMQ.Advisory,ou=Topic,ou=Destination,ou=ActiveMQ,ou=system
+dn: cn=write,cn=ActiveMQ.Advisory.$,ou=Topic,ou=Destination,ou=ActiveMQ,ou=system
 cn: write
 member: cn=admins
 member: cn=users
 objectClass: groupOfNames
 objectClass: top
 
-dn: cn=admin,cn=ActiveMQ.Advisory,ou=Topic,ou=Destination,ou=ActiveMQ,ou=system
+dn: cn=admin,cn=ActiveMQ.Advisory.$,ou=Topic,ou=Destination,ou=ActiveMQ,ou=system
 cn: admin
 member: cn=admins
 member: cn=users
