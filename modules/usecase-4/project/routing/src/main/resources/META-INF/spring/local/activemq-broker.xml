@@ -15,10 +15,6 @@
     <!-- ActiveMQ Broker -->
     <broker brokerName="demo" xmlns="http://activemq.apache.org/schema/core">
 
-        <destinations>
-            <queue physicalName="ADMIN.FOO"/>
-        </destinations>
-
         <destinationPolicy>
             <policyMap>
                 <policyEntries>

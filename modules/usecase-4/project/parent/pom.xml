@@ -31,6 +31,7 @@
         <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
         <maven-resources-plugin.version>2.5</maven-resources-plugin.version>
         <maven-install-plugin.version>2.3.1</maven-install-plugin.version>
+        <maven-surefire.version>2.19.1</maven-surefire.version>
         <felix-maven-plugin.version>2.3.7</felix-maven-plugin.version>
         <fabric8-plugin.version>1.2.0.redhat-621084</fabric8-plugin.version>
 
@@ -148,6 +149,11 @@
                 <version>${apache-ds-shared.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.directory.shared</groupId>
+                <artifactId>shared-ldap-model</artifactId>
+                <version>${apache-ds-shared.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.directory.jdbm</groupId>
                 <artifactId>apacheds-jdbm2</artifactId>
                 <version>${apache-ds-jdbm.version}</version>
@@ -206,6 +212,11 @@
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>${build-helper-maven-plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -233,11 +244,6 @@
                         <Require-Bundle>${osgi-require-bundle}</Require-Bundle>
                     </instructions>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
             </plugin>
         </plugins>
     </build>
