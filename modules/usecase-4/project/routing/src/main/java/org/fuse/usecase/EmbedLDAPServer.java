@@ -21,55 +21,56 @@ public class EmbedLDAPServer {
     private File workDir;
     private DirectoryService dirService;
     private LdapServer ldapServer;
-    private static String ldif = "/org/fuse/usecase/activemq.ldif";
+
+    private String ldif;
 
     private static final Logger LOG = LoggerFactory.getLogger(EmbedLDAPServer.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         LOG.info("Start LDAP Server ...");
         EmbedLDAPServer server = new EmbedLDAPServer();
         server.init();
         LOG.info("LDAP Server started");
     }
 
-    public void init() {
+    public void init() throws Exception {
+        DirectoryServiceFactory lFactory = new DefaultDirectoryServiceFactory();
+        lFactory.init("Standalone");
+        LOG.info("Factory created");
 
-        try {
-            final DirectoryServiceFactory lFactory = new DefaultDirectoryServiceFactory();
-            lFactory.init("Standalone");
-            LOG.info("Factory created");
+        DirectoryService lService = lFactory.getDirectoryService();
+        lService.getChangeLog().setEnabled(false);
+        lService.setShutdownHookEnabled(true);
 
-            final DirectoryService lService = lFactory.getDirectoryService();
-            lService.getChangeLog().setEnabled(false);
-            lService.setShutdownHookEnabled(true);
+        LdapServer lServer = new LdapServer();
+        lServer.setTransports(new TcpTransport("localhost", 33389));
+        lServer.setDirectoryService(lService);
+        LOG.info("Server initialized");
 
-            final LdapServer lServer = new LdapServer();
-            lServer.setTransports(new TcpTransport("localhost", 33389));
-            lServer.setDirectoryService(lService);
-            LOG.info("Server initialized");
+        lService.startup();
+        lServer.start();
 
-            lService.startup();
-            lServer.start();
-
-            new LdifFileLoader(lService.getAdminSession(), getResourceAsStream(ldif), null).execute();
-            LOG.info("LDIF data loaded");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        new LdifFileLoader(lService.getAdminSession(), getResourceAsStream(ldif), null).execute();
+        LOG.info("LDIF data loaded");
     }
 
-    public File getResourceAsStream(String name) {
+    private File getResourceAsStream(String name) {
         URL url = EmbedLDAPServer.class.getResource(name);
         File f;
         try {
             f = new File(url.toURI());
-        } catch(URISyntaxException e) {
+        } catch (URISyntaxException e) {
             f = new File(url.getPath());
         }
         return f;
     }
 
+    public String getLdif() {
+        return ldif;
+    }
+
+    public void setLdif(String ldif) {
+        this.ldif = ldif;
+    }
 
 }

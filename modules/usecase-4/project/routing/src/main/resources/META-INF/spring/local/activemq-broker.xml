@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:security="http://www.springframework.org/schema/security"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://activemq.apache.org/schema/core
-       http://activemq.apache.org/schema/core/activemq-core.xsd
-       http://www.springframework.org/schema/security
-       http://www.springframework.org/schema/security/spring-security.xsd">
+       http://activemq.apache.org/schema/core/activemq-core.xsd">
 
-    <!-- Embedded Apache DS - LDAP Server launched by Spring
-    <security:ldap-server
-            manager-dn="uid=admin,ou=User,ou=ActiveMQ,ou=system"
-            manager-password="sunflower"
-            ldif="classpath:org/fuse/usecase/activemq.ldif"/>
-    -->
-
-    <bean id="ldapEmbedded" class="org.fuse.usecase.EmbedLDAPServer" init-method="init"/>
+    <!-- Standalone Apache DS Server -->
+    <bean id="ldapEmbedded" class="org.fuse.usecase.EmbedLDAPServer" init-method="init">
+        <property name="ldif" value="/org/fuse/usecase/activemq.ldif"/>
+    </bean>
 
     <!-- ActiveMQ Broker -->
     <broker brokerName="demo" xmlns="http://activemq.apache.org/schema/core">
