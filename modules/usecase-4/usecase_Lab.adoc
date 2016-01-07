@@ -1,27 +1,20 @@
-cd ..== Use Case 3 - Camel Route publishing the messages into a queue and handling the DLQ messages
+== Use Case 4 : Authenticate and authorize the access to the A-MQ broker using a LDAP server
 
-The purpose of this use case is to extend/revisit the use case 1 to publish the JSON messages into different queues instead of the folders outbox and error.
-For the erroneous messages, you will replace the DLQ folder with a DLQ queue and will develop a strategy to update/correct the erroneous messages
-and re inject these messages into the normal flow. A redelivery policy must be put in place to avoid that the client, through the connection factory
-, tries to redeliver the erroneous message.
+The purpose of this use case is to secure/restrict the access to the A-MQ Broker using a LDAP Server as backend system to host the users and their roles. This use case will extend the previously created use case.
+2 users will be created (admin, jdoe) and they will be associated to different A-MQ roles (admin, write & read) in order to manage using the authorization plugin the operation they could perform on the queues; create, publish or read.
+.
 
-A notification/alert mechanism must be developed to send a message to a topic containing the error code and error message. To be notified that there is an error,
-an interception strategy must be defined to check if there is an IllegalArgumentException generated. If this is case, an error code and the exception message will
-be added to the message that you will publish on a topic.
-A client is connected to this topic in order to be informed about the error reported when a faulty exception is thrown. The erroneous message and the message code
-received will be saved into an error table. Each record created will be managed with a status (ERROR, FIXED, CLOSE).
-According to the strategy that you have developed to correct the message, you will next resend/republish it to the queue consuming
-the input messages in order to process it if the status value is equal to FIXED. The messages consuled from the database will have finally their status updated to the value CLOSE.
+During this use case development, you will extend the existing LDIF created for the Apache Directory LDAP server in order to add the entries required to restrict the access to the queues usecase-input, usecase-error and usecase-output.
+The user "John Doe - jdoe" which is part of the "users" group will be associated to the roles (admin, write and read) in order top be able to perform the required operation executed by the different Apache Camel Routes.
+You will also configure accordingly the A-MQ Broker XML file in order to use the JAAS LDAP Plugin and the Cached LDAP Authorization plugin required to secure A-MQ.
 
 .Goals
-* Combine the Routing and Integration technology with a messaging platform
-* Develop a project able to use locally Apache ActiveMQ or JBoss A-MQ to publish the messages into different queues
-* Use the DLQ pattern supported by Apache ActiveMQ / JBoss A-MQ
-* Implement a redelivery strategy with Apache ActiveMQ / JBoss A-MQ to disable th redelivery
-* Notify the durable subscriber client using a topic that erroneous messages have been produced
-* Report the error (code and message) within the usecase database (table T_ERROR)
-* Report also the error on the console using Log4j with the logging level "DEBUG" and the logger name "org.fuse.usecase"
-* Use the Camel SQL component to INSERT the record within the DB and listen to corrected messages from the table T_ERROR
+* Secure the A-MQ Broker
+* Externalize the credentials, roles and access within a LDAP server
+* Use JAAS & LDAP plugin to authenticate the users connected to the broker
+* Restrict the access and the operations to be performed on the destination (admin, write, read) using the ActiveMQ Cached LDAP authorization plugin
+* Design a unit test to validate the operations that a user could perform
+
 
 :numbered:
 

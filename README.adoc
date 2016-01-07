@@ -107,7 +107,7 @@ the input messages in order to process it if the status value is equal to FIXED.
 Based on the previous use case, you will now secure the access to the A-MQ Broker using the JAAS LDAP module and a LDAP server (Apache DS). 2 users will be created (admin, jdoe) and
 they will be associated to different roles (admin, write & read) in order to manage using the authorization plugin the operation they could perform on the queues; create, publish or read.
 
-* Time estimated : 2H
+* Time estimated : 2-3h
 * How to evaluate the solution of the student :
 - Review the LDIF file created to secure, restrict access to the A-MQ broker
 - Check the A-MQ Broker configuration to authenticate/authorize the user accessing the LDAP server
