@@ -46,6 +46,8 @@ image::images/application_structure.png[width="40%"]
 
 Extend the existing LDIF file to add the role `write, admin and read` to the destinations usecase-input, usecase-error and usecase-output for the user `jdoe`
 
+IMPORTANT: Password the user `jdoe` is `sunflower`
+
 === Update the A-MQ Broker XML configuration
 
 A few steps are required to secure the A-MQ broker
