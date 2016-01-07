@@ -1,0 +1,7 @@
+== Use Case 3 - FAQ for instructors delivering the iLT
+
+.Issues
+* The important note in the instructions (Section 1.2) indicates we are using an external broker. However, the broker configuration seems to be inside the META-INF/spring/camel-context.xml. Should it be externalized? Also, should there be instructions on starting a standalone broker instance? When the solution is built and run, the junit tests complain about a missing META-INF/spring/local/activemq-broker.xml.
+* In route sql-queue-input, it selects rows that have the status 'FIXED' to redeliver. When/where does this status get set?
+* For the redelivered messages, it looks like you route them through the amq-tx (transactional queue) which converts to JSON and re-publishes on amq-notx. Why is the transactional queue used? Refer to route queue-split-transform-queue.
+
