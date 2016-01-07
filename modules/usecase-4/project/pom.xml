@@ -11,9 +11,10 @@
     <name>Fuse :: Use Case 4 :: Project</name>
 
     <modules>
+        <module>parent</module>
+        <module>ldap</module>
         <module>routing</module>
         <module>features</module>
-        <module>parent</module>
         <module>testing</module>
     </modules>
 

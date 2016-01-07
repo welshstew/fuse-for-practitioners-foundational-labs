@@ -101,7 +101,7 @@ CREATE TABLE USECASE.T_ERROR (
 );
 ----
 
-=== Configure the Camel ActiveMQComponent and d the connectionFactory
+=== Configure the Camel ActiveMQComponent and the connectionFactory
 
 In order to use locally the project, you will create a Spring XML file to setup a Broker. The Broker configuration must include the following paramaters
 

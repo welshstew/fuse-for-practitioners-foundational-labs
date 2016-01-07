@@ -41,6 +41,8 @@
         <osgi-private-package/>
         <osgi-dynamic-package/>
         <osgi-require-bundle/>
+        <osgi-embed-dep/>
+        <osgi-embed-transitive/>
     </properties>
 
     <dependencyManagement>
@@ -242,6 +244,8 @@
                         <Export-Package>${osgi-export-package}</Export-Package>
                         <DynamicImport-Package>${osgi-dynamic-package}</DynamicImport-Package>
                         <Require-Bundle>${osgi-require-bundle}</Require-Bundle>
+                        <Embed-Dependency>${osgi-embed-dep}</Embed-Dependency>
+                        <Embed-Transitive>${osgi-embed-transitive}</Embed-Transitive>
                     </instructions>
                 </configuration>
             </plugin>

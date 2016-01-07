@@ -1,0 +1,163 @@
+== Use Case 4 : Authenticate and authorize the access to the A-MQ broker using a LDAP server
+
+The purpose of this use case is to secure/restrict the access to the A-MQ Broker using a LDAP Server as backend system to host the users and their roles. This use case will extend the previously created use case.
+2 users will be created (admin, jdoe) and they will be associated to different A-MQ roles (admin, write & read) in order to manage using the authorization plugin the operation they could perform on the queues; create, publish or read.
+.
+
+During this use case development, you will extend the existing LDIF created for the Apache Directory LDAP server in order to add the entries required to restrict the access to the queues usecase-input, usecase-error and usecase-output.
+The user "John Doe - jdoe" which is part of the "users" group will be associated to the roles (admin, write and read) in order top be able to perform the required operation executed by the different Apache Camel Routes.
+You will also configure accordingly the A-MQ Broker XML file in order to use the JAAS LDAP Plugin and the Cached LDAP Authorization plugin required to secure A-MQ.
+
+.Goals
+* Secure the A-MQ Broker
+* Externalize the credentials, roles and access within a LDAP server
+* Use JAAS & LDAP plugin to authenticate the users connected to the broker
+* Restrict the access and the operations to be performed on the destination (admin, write, read) using the ActiveMQ Cached LDAP authorization plugin
+* Design a unit test to validate the operations that a user could perform on a queue
+
+:numbered:
+
+== Import the Project (TODO - Discuss how we will setup the project)
+
+. In JBoss Developer Studio, switch to the *Git* perspective. 
+. Click the icon at the top to clone a Git repository and add the clone to this view.
+. In the *URI* text box, copy and paste the following: 
++
+------
+https://github.com/gpe-mw-training/fuse-for-practitioners-labs.git
+------
++
+. Switch to *Project Explorer* for the *JBoss* perspective.
+. Import a new Maven project by selecting *File -> Import -> Maven -> Existing Maven Projects -> Next*. Import the `core` and it's parent project
+. Navigate to the location of the Git projects for the Data Transformation tool and click *Finish*.
+. Click the *Project Explorer* tab and expand the `Inbound` project node. 
++  
+.Application structure
+image::images/application_structure.png[width="40%"]
+
+. Examine the following files and folders that appear in the expanded view:
+
+* `routing`: module in which you will develop the `route`, `unit test` of the use-case.
+** `src/main/resources/schema` : JSON and csv schemas files you will need to create the Data Transformation
+* `parent` : Contain JBoss Fuse 6.2.1 dependencies, properties definition and maven plugins used by the modules
+* `features` : Apache Karaf XML features file to be used to deploy the `usecase` project on JBoss Fuse without Fabric technology
+
+=== Extend the LDIF file
+
+Extend the existing LDIF file to add the role `write, admin and read` to the destinations usecase-input, usecase-error and usecase-output for the user `jdoe`
+
+IMPORTANT: Password the user `jdoe` is `sunflower`
+
+=== Update the A-MQ Broker XML configuration
+
+A few steps are required to secure the A-MQ broker
+
+* Remove the Simple Authentication Plugin and replace it by the JAAS LDAP authentication plugin
+* Setup the configuration of tis plugin to use the `LDAPLogin` JAAS module defined within the login.config file
+* Add the Cached LDAP Authorization plugin using the following parameters
+
+[source,xml]
+----
+connectionURL="ldap://localhost:33389"
+queueSearchBase="ou=Queue,ou=Destination,ou=ActiveMQ,ou=system"
+topicSearchBase="ou=Topic,ou=Destination,ou=ActiveMQ,ou=system"
+tempSearchBase="ou=Temp,ou=Destination,ou=ActiveMQ,ou=system"
+adminPermissionGroupSearchFilter="(cn=admin)"
+writePermissionGroupSearchFilter="(cn=write)"
+readPermissionGroupSearchFilter="(cn=read)"
+legacyGroupMapping="true"
+----
+
+=== Develop a unit test to validate the modifications
+
+Design a JUnit test to validate the operations (admin, write & read) that the user jdoe could perform on the queues `usecase-input` and `usecase-input2`. The user `jdoe` should be
+able to publish/consume a message to the `usecase-input` while it will fail on the  `usecase-input2` queue.
+
+* Develop a Junit test within a separate maven testing module using the Apache Directory Server annotations (@CreateLdapServer, @CreateTransport, @ApplyLdifFiles) where the Transport protocol defined is
+LDAP, the port number of the server is `1024` and the ldif file is a copy of the file created with in the routing maven module
+* Your Junit Test class will extend the abstract AbstractLdapTestUnit class
+* Add 2 methods to be tested (testCreateQueuePublishConsume and testFailCreateQueuePublishConsume) where the first will succeed on the queue `usecase-input` and the other will fail on `usecase-input2`
+* Add a assert condition with the first method tested to verify that you get a message
+* Use a fail assert for the second test and assert that the Exception thrown is equal to `User jdoe is not authorized to write to: queue://usercase-input2`
+
+=== Build the `routing` Project & test it locally
+
+. On the command line, run the following commands
+
+[source]
+----
+mvn clean install
+mvn camel:run
+----
+
+. Demonstrate that your logic implemented is correct (records into the DB, messages within the queues, ...)
+
+== Use JBoss Fuse LDAP JAAS
+
+When the project is deployed on JBoss Fuse, you can rely on its JAAS Security layer instead of the login.config file loaded by default when the JAAS LDAP plugin of A-MQ is called.
+Perform the following steps to use the Karaf security layer and add a JAAS LDAP module
+
+* Develop a Blueprint XML file containing the configuration of the LDAP JAAS Module. The name of this config module is `LDAPconfig`
+* Use the following properties to configure the parameters based on what has been defined within the login.config file
+
+[source]
+----
+initialContextFactory=com.sun.jndi.ldap.LdapCtxFactory
+connection.username=cn=admin,dc=activemq,dc=redhat,dc=com
+connection.password=sunflower
+connection.protocol=
+connection.url=ldap://localhost:389
+user.base.dn=ou=User,ou=ActiveMQ,dc=activemq,dc=redhat,dc=com
+user.filter=(uid=%u)
+user.search.subtree=true
+role.base.dn=ou=Group,ou=ActiveMQ,dc=activemq,dc=redhat,dc=com
+role.name.attribute=cn
+role.filter=(member= uid=%u)
+role.search.subtree=false
+authentication=simple
+----
+
+IMPORTANT: The syntax of the query is a bit different for the user.filter and the role.filter as you will have to use %u to get the user and/or its role
+
+=== Design the features file to deploy the project on JBoss Fuse
+
+* Define the features XML file to deploy the project on JBoss Fuse 6.2.1
+* As there is a broker deployed by default on JBoss Fuse, you will have to update its configuration. This can be done using within a feature, the <configFile/> tag
+* Add the Blueprint XML file to a new feature called `jaas-ldap-config`
+* Test the project on JBoss Fuse using these commands to be executed within the JBoss Fuse console.
+
+[source]
+----
+addurl mvn:org.fuse.usecase4/features/1.0/xml/features
+features:install jaas-ldap
+features:install usecase-secure-jms
+----
+
+== Bonus
+
+Instead of using the features XML file, you can also create a Fabric8 profile by editing the <fabric8.xxxx> xml tags that you have within the pom.xml routing file
+and next execute this command to create the profile into JBoss Fuse Fabric
+
+[source]
+----
+mvn fabric8:deploy
+----
+
+== Useful SQL scripts
+
+[source]
+----
+INSERT INTO USECASE.T_ACCOUNT (CLIENT_ID,SALES_CONTACT,COMPANY_NAME,COMPANY_GEO,COMPANY_ACTIVE,CONTACT_FIRST_NAME,CONTACT_LAST_NAME,CONTACT_ADDRESS,CONTACT_CITY,CONTACT_STATE,CONTACT_ZIP,CONTACT_PHONE,CREATION_DATE,CREATION_USER) VALUES ('95','Rachel Cassidy','MountainBikers','SOUTH_AMERICA',true,'George','Jungle','1101 Smith St.','Raleigh','NC','27519','919-555-0800','2015-12-15','fuse_usecase');
+
+DELETE FROM USECASE.T_ACCOUNT;
+DELETE FROM USECASE.T_ERROR;
+
+SELECT * FROM USECASE.T_ACCOUNT;
+SELECT * FROM USECASE.T_ERROR;
+
+UPDATE USECASE.T_ERROR SET MESSAGE='Error,EU,true,Fred,Quicksand,202 Barney Blvd.,Rock City,MI,19728,313-555-1234', STATUS='FIXED' WHERE ID=8;
+
+DROP SCHEMA USECASE;
+----
+
+

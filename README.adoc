@@ -98,17 +98,20 @@ the input messages in order to process it if the status value is equal to FIXED.
 - Verify that the faulty message is not redelivered and well saved into the DLQ.usecase-inout queue
 - Challenge the strategy developed by the student to correct the messages and reinject them within the input queue
 - Review the JMS/ActiveMQ components, how they are configured to access the Broker
-- Control that JMS TxManager is used
+- Control that theJMS TxManager is used
 
-== Use Case 4 : xxxx
+== Use Case 4 : Authenticate and authorize the access to the A-MQ broker using a LDAP server
 
 * Description
 
-Based on the previous used case, you will now secure the A-MQBroker using the JAAS LDAP module and a LDAP server (Apache DS).
-3 roles will be created (admin, write & read) to restrict the access and management of the users on the broker
+Based on the previous use case, you will now secure the access to the A-MQ Broker using the JAAS LDAP module and a LDAP server (Apache DS). 2 users will be created (admin, jdoe) and
+they will be associated to different roles (admin, write & read) in order to manage using the authorization plugin the operation they could perform on the queues; create, publish or read.
 
-* Time estimated : ?
-* How to evaluate the solution of the student : ?
+* Time estimated : 2-3h
+* How to evaluate the solution of the student :
+- Review the LDIF file created to secure, restrict access to the A-MQ broker
+- Check the A-MQ Broker configuration to authenticate/authorize the user accessing the LDAP server
+- Review the jUnit Test case developed and controlling how a user can write or not to a queue if he/she the grants to perform such operation
 
 == Use Case 5 : xxxx
 
