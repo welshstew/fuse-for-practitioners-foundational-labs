@@ -129,7 +129,7 @@ IMPORTANT: The syntax of the query is a bit different for the user.filter and th
 [source]
 ----
 addurl mvn:org.fuse.usecase4/features/1.0/xml/features
-features:install jaas-ldap-config
+features:install jaas-ldap
 features:install usecase-secure-jms
 ----
 
