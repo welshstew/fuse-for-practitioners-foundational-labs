@@ -7,11 +7,6 @@
        http://activemq.apache.org/schema/core
        http://activemq.apache.org/schema/core/activemq-core.xsd">
 
-    <!-- Standalone Apache DS Server -->
-    <bean id="ldapEmbedded" class="org.fuse.usecase.EmbedLDAPServer" init-method="init">
-        <property name="ldif" value="/org/fuse/usecase/activemq.ldif"/>
-    </bean>
-
     <!-- ActiveMQ Broker -->
     <broker brokerName="demo" xmlns="http://activemq.apache.org/schema/core">
 

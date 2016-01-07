@@ -26,6 +26,7 @@
             org.apache.camel.impl;version="[2.0,3.0)",
             org.apache.camel.spi;version="[2.0,3.0)",
             org.apache.camel.component.dozer;version="[2.0,3.0)",
+            org.fuse.usecase.ldap,
             org.h2,
             *
         </osgi-import-package>
@@ -35,14 +36,22 @@
         <osgi-dynamic-package>*</osgi-dynamic-package>
         <osgi-require-bundle>org.apache.activemq.activemq-osgi</osgi-require-bundle>
 
-        <fabric8.profile>fuse-usecase3</fabric8.profile>
+        <fabric8.profile>fuse-usecase4</fabric8.profile>
         <fabric8.parentProfiles>feature-camel</fabric8.parentProfiles>
         <fabric8.features>camel-spring camel-dozer camel-jackson camel-bindy</fabric8.features>
-        <fabric8.bundle>mvn:org.fuse.usecase3/routing/1.0</fabric8.bundle>
+        <fabric8.bundle>mvn:org.fuse.usecase4/routing/1.0</fabric8.bundle>
         <fabric8.profileConfigDir>src/main/resources/fabric8</fabric8.profileConfigDir>
     </properties>
 
     <dependencies>
+        <!-- LDAP -->
+        <dependency>
+            <groupId>org.fuse.usecase4</groupId>
+            <artifactId>ldap</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!-- Camel -->
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-spring</artifactId>
@@ -112,58 +121,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-ldap</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-        </dependency>
 
-        <!-- Apache DS -->
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-core-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-core-annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-protocol-ldap</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-protocol-shared</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.server</groupId>
-            <artifactId>apacheds-server-jndi</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.directory.shared</groupId>
-            <artifactId>shared-ldap-codec-standalone</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.shared</groupId>
-            <artifactId>shared-ldap-model</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.directory.jdbm</groupId>
-            <artifactId>apacheds-jdbm2</artifactId>
-        </dependency>
-
-        <!-- logging -->
-        <!-- We must downgrade slf4j as org.apache.commons.logging.impl.SLF4JLocationAwareLog reports this error
-            SLF4J: The requested version 1.6.99 by your slf4j binding is not compatible with [1.5.5, 1.5.6, 1.5.7, 1.5.8, 1.5.9, 1.5.10]
-            -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -204,8 +162,7 @@
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-maven-plugin</artifactId>
                 <configuration>
-                    <!--<applicationContextUri>META-INF/spring/*.xml;META-INF/spring/local/*.xml</applicationContextUri>-->
-                    <applicationContextUri>META-INF/spring/local/*.xml</applicationContextUri>
+                    <applicationContextUri>META-INF/spring/*.xml;META-INF/spring/local/activemq-broker.xml</applicationContextUri>
                 </configuration>
             </plugin>
 
@@ -243,6 +200,13 @@
     <profiles>
         <profile>
             <id>camel-dummy</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.fuse.usecase4</groupId>
+                    <artifactId>ldap</artifactId>
+                    <version>1.0</version>
+                </dependency>
+            </dependencies>
             <build>
                 <plugins>
                     <!-- Camel plugin -->
@@ -250,7 +214,7 @@
                         <groupId>org.apache.camel</groupId>
                         <artifactId>camel-maven-plugin</artifactId>
                         <configuration>
-                            <applicationContextUri>META-INF/spring/local/*.xml</applicationContextUri>
+                            <applicationContextUri>META-INF/spring/ldap-server.xml;META-INF/spring/local/*.xml</applicationContextUri>
                         </configuration>
                     </plugin>
                     <plugin>
