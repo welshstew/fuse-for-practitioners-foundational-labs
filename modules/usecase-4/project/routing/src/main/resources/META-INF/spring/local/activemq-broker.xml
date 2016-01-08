@@ -38,25 +38,6 @@
                     />
                 </map>
             </authorizationPlugin>
-            <!-- A-MQ Config -->
-            <!--
-            <authorizationPlugin>
-                <map>
-                    <cachedLDAPAuthorizationMap
-                            connectionURL="ldap://localhost:33389"
-                            queueSearchBase="ou=Queue,ou=Destination,ou=ActiveMQ,ou=system"
-                            topicSearchBase="ou=Topic,ou=Destination,ou=ActiveMQ,ou=system"
-                            tempSearchBase="ou=Temp,ou=Destination,ou=ActiveMQ,ou=system"
-                            adminPermissionGroupSearchFilter="(cn=admin)"
-                            writePermissionGroupSearchFilter="(cn=write)"
-                            readPermissionGroupSearchFilter="(cn=read)"
-                            legacyGroupMapping="true"
-                            refreshInterval="30000"
-                            groupClass="org.apache.karaf.jaas.boot.principal.RolePrincipal"
-                    />
-                </map>
-            </authorizationPlugin>
-            -->
         </plugins>
 
         <transportConnectors>
