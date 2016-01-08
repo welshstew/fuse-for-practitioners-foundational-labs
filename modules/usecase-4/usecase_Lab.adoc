@@ -44,7 +44,7 @@ image::images/application_structure.png[width="40%"]
 
 === Extend the LDIF file
 
-Extend the existing LDIF file to add the role `write, admin and read` to the destinations usecase-input, usecase-error and usecase-output for the user `jdoe`
+Extend the existing LDIF file available under routing/resources/org/fuse/usecase/activemq.ldif to add the role `write, admin and read` to the destinations usecase-input, usecase-error and usecase-output for the user `jdoe`
 
 IMPORTANT: Password the user `jdoe` is `sunflower`
 
@@ -53,7 +53,7 @@ IMPORTANT: Password the user `jdoe` is `sunflower`
 A few steps are required to secure the A-MQ broker
 
 * Remove the Simple Authentication Plugin and replace it by the JAAS LDAP authentication plugin
-* Setup the configuration of tis plugin to use the `LDAPLogin` JAAS module defined within the login.config file
+* Setup the configuration of this plugin to use the `LDAPLogin` JAAS module defined within the login.config file
 * Add the Cached LDAP Authorization plugin using the following parameters
 
 [source,xml]
@@ -66,6 +66,7 @@ adminPermissionGroupSearchFilter="(cn=admin)"
 writePermissionGroupSearchFilter="(cn=write)"
 readPermissionGroupSearchFilter="(cn=read)"
 legacyGroupMapping="true"
+groupClass="org.apache.karaf.jaas.boot.principal.RolePrincipal"
 ----
 
 === Develop a unit test to validate the modifications

@@ -90,6 +90,16 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-core-avl</artifactId>
+                <version>${apache-ds.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-i18n</artifactId>
+                <version>${apache-ds.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
                 <artifactId>apacheds-core-api</artifactId>
                 <version>${apache-ds.version}</version>
             </dependency>
@@ -118,7 +128,6 @@
                 <artifactId>apacheds-server-annotations</artifactId>
                 <version>${apache-ds.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.directory.server</groupId>
                 <artifactId>apacheds-core-integ</artifactId>
@@ -139,10 +148,60 @@
                 <artifactId>apacheds-server-jndi</artifactId>
                 <version>${apache-ds.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-interceptors-changelog</artifactId>
+                <version>${apache-ds.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-interceptors-journal</artifactId>
+                <version>${apache-ds.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-ldif-partition</artifactId>
+                <version>${apache-ds.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-xdbm-partition</artifactId>
+                <version>${apache-ds.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-jdbm-partition</artifactId>
+                <version>${apache-ds.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.apache.directory.shared</groupId>
+                <artifactId>shared-asn1-api</artifactId>
+                <version>${apache-ds-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.shared</groupId>
+                <artifactId>shared-asn1-ber</artifactId>
+                <version>${apache-ds-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.shared</groupId>
+                <artifactId>shared-i18n</artifactId>
+                <version>${apache-ds-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.shared</groupId>
                 <artifactId>shared-ldap</artifactId>
+                <version>${apache-ds-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.shared</groupId>
+                <artifactId>shared-ldap-codec-core</artifactId>
+                <version>${apache-ds-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.shared</groupId>
+                <artifactId>shared-ldap-extras-aci</artifactId>
                 <version>${apache-ds-shared.version}</version>
             </dependency>
             <dependency>
@@ -152,7 +211,17 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.directory.shared</groupId>
+                <artifactId>shared-ldap-schema-data</artifactId>
+                <version>${apache-ds-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.shared</groupId>
                 <artifactId>shared-ldap-model</artifactId>
+                <version>${apache-ds-shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.shared</groupId>
+                <artifactId>shared-util</artifactId>
                 <version>${apache-ds-shared.version}</version>
             </dependency>
             <dependency>
