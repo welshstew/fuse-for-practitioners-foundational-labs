@@ -62,6 +62,11 @@
                                     <type>xml</type>
                                     <classifier>features</classifier>
                                 </artifact>
+                                <artifact>
+                                    <file>target/classes/amq-broker.xml</file>
+                                    <type>xml</type>
+                                    <classifier>amq-broker</classifier>
+                                </artifact>
                             </artifacts>
                         </configuration>
                     </execution>

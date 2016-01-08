@@ -9,6 +9,7 @@
     <feature>activemq-camel</feature>
     <feature>h2</feature>
     <feature>jaas-ldap</feature>
+    <feature>amq-config</feature>
     <bundle>mvn:org.fuse.usecase4/routing/${project.version}</bundle>
   </feature>
 
@@ -17,8 +18,11 @@
   </feature>
 
   <feature name="jaas-ldap" version="${project.version}">
-<!--    <bundle>mvn:org.apache.servicemix.bundles.org.apache.servicemix.bundles.antlr/2.7.7_5</bundle>-->
     <bundle>mvn:org.fuse.usecase4/ldap/${project.version}</bundle>
+  </feature>
+
+  <feature name="amq-config" version="${project.version}">
+    <configfile finalname="etc/activemq.xml">mvn:org.fuse.usecase4/features/1.0/xml/amq-broker</configfile>
   </feature>
 
 
