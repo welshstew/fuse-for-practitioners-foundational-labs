@@ -42,15 +42,15 @@ image::images/application_structure.png[width="40%"]
 * `parent` : Contain JBoss Fuse 6.2.1 dependencies, properties definition and maven plugins used by the modules
 * `features` : Apache Karaf XML features file to be used to deploy the `usecase` project on JBoss Fuse without Fabric technology
 
-=== Extend the LDIF file
+=== Extend the LDIF file of the LDAP Server
 
-Extend the existing LDIF file available under routing/resources/org/fuse/usecase/activemq.ldif to add the role `write, admin and read` to the destinations usecase-input, usecase-error and usecase-output for the user `jdoe`
+Extend the existing LDIF file available here `routing/resources/org/fuse/usecase/activemq.ldif` and here `ldap/src/main/resources/org/fuse/usecase/activemq.ldif` to add the role `write, admin and read` to the queues usecase-input, usecase-error and topic `usecase-output` for the user `jdoe`
 
-IMPORTANT: Password the user `jdoe` is `sunflower`
+IMPORTANT: Password of the user `jdoe` is `sunflower`
 
 === Update the A-MQ Broker XML configuration
 
-A few steps are required to secure the A-MQ broker
+A few steps are required to reconfigure the A-MQ broker in order to use the JAAS Authentication & autorization modules
 
 * Remove the Simple Authentication Plugin and replace it by the JAAS LDAP authentication plugin
 * Setup the configuration of this plugin to use the `LDAPLogin` JAAS module defined within the login.config file
@@ -72,9 +72,9 @@ groupClass="org.apache.karaf.jaas.boot.principal.RolePrincipal"
 === Develop a unit test to validate the modifications
 
 Design a JUnit test to validate the operations (admin, write & read) that the user jdoe could perform on the queues `usecase-input` and `usecase-input2`. The user `jdoe` should be
-able to publish/consume a message to the `usecase-input` while it will fail on the  `usecase-input2` queue.
+able to publish/consume a message to the `usecase-input` while it will fail on the `usecase-input2` queue.
 
-* Develop a Junit test within a separate maven testing module using the Apache Directory Server annotations (@CreateLdapServer, @CreateTransport, @ApplyLdifFiles) where the Transport protocol defined is
+* Develop a Junit test within a new maven `testing` module using the Apache Directory Server annotations (@CreateLdapServer, @CreateTransport, @ApplyLdifFiles) where the Transport protocol defined is
 LDAP, the port number of the server is `1024` and the ldif file is a copy of the file created with in the routing maven module
 * Your Junit Test class will extend the abstract AbstractLdapTestUnit class
 * Add 2 methods to be tested (testCreateQueuePublishConsume and testFailCreateQueuePublishConsume) where the first will succeed on the queue `usecase-input` and the other will fail on `usecase-input2`
