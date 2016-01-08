@@ -83,7 +83,9 @@ LDAP, the port number of the server is `1024` and the ldif file is a copy of the
 
 === Build the `routing` Project & test it locally
 
-. On the command line, run the following commands
+If your the new ActiveMQ configuration and the LDIF file of the LDAP servers have been configured correctly, you should be able to run your project locally
+
+. On the command line, run the following commands within the routing directory
 
 [source]
 ----
@@ -99,6 +101,7 @@ When the project is deployed on JBoss Fuse, you can rely on its JAAS Security la
 Perform the following steps to use the Karaf security layer and add a JAAS LDAP module
 
 * Develop a Blueprint XML file containing the configuration of the LDAP JAAS Module. The name of this config module is `LDAPconfig`
+* Add this file within the maven `ldap` module
 * Use the following properties to configure the parameters based on what has been defined within the login.config file
 
 [source]
@@ -122,9 +125,10 @@ IMPORTANT: The syntax of the query is a bit different for the user.filter and th
 
 === Design the features file to deploy the project on JBoss Fuse
 
-* Define the features XML file to deploy the project on JBoss Fuse 6.2.1
-* As there is a broker deployed by default on JBoss Fuse, you will have to update its configuration. This can be done using within a feature, the <configFile/> tag
-* Add the Blueprint XML file to a new feature called `jaas-ldap-config`
+* Define the `usecase-secure-jms` features XML file to deploy the project on JBoss Fuse 6.2.1
+* As there is a broker deployed by default on JBoss Fuse, you will have to update its configuration.
+* By consequence, develop a new A-MQ Broker config file under the `features` maven module into the `src/main/filered-resources` folder
+* Add this new ActiveMQ Broker XML file to a new feature called `jaas-ldap-config` and deploy it using the XML tag <configFile/>
 * Test the project on JBoss Fuse using these commands to be executed within the JBoss Fuse console.
 
 [source]

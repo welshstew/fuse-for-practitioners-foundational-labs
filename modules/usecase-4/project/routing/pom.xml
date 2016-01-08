@@ -48,6 +48,12 @@
             <groupId>org.fuse.usecase4</groupId>
             <artifactId>ldap</artifactId>
             <version>1.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.directory.server</groupId>
+                    <artifactId>apacheds-all</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Camel -->
@@ -161,7 +167,9 @@
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-maven-plugin</artifactId>
                 <configuration>
-                    <applicationContextUri>META-INF/spring/*.xml;META-INF/spring/local/activemq-broker.xml,META-INF/spring/local/ldap-server.xml</applicationContextUri>
+                    <applicationContextUri>
+                        META-INF/spring/local/ldap-server.xml;META-INF/spring/local/activemq-broker.xml;META-INF/spring/*.xml
+                    </applicationContextUri>
                 </configuration>
             </plugin>
 
@@ -213,7 +221,8 @@
                         <groupId>org.apache.camel</groupId>
                         <artifactId>camel-maven-plugin</artifactId>
                         <configuration>
-                            <applicationContextUri>META-INF/spring/ldap-server.xml;META-INF/spring/local/*.xml</applicationContextUri>
+                            <applicationContextUri>META-INF/spring/ldap-server.xml;META-INF/spring/local/*.xml
+                            </applicationContextUri>
                         </configuration>
                     </plugin>
                     <plugin>
