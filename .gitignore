@@ -26,4 +26,8 @@ config/templates/_temp.yaml
 .settings/
 styles/
 
+**/src/data/error
+**/src/data/outbox
+**/activemq-data
+
 
