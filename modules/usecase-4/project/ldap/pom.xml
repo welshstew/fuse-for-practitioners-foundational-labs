@@ -16,17 +16,19 @@
 
     <properties>
         <osgi-import-package>
-            !org.fuse.usecase.ldap;version="1.0",
             !org.junit*,
             !junit*,
-            !org.apache.directory*,
             !org.hibernate*,
             org.slf4j,
             org.slf4j.impl;resolution:="optional",
-            jdbm*;resolution:="optional",
             org.apache.karaf.jaas.config,
             org.apache.karaf.jaas.modules.ldap,
             *
+            <!--
+              !org.fuse.usecase.ldap;version="1.0",
+              !org.apache.directory*,
+              jdbm*;resolution:="optional",
+            -->
         </osgi-import-package>
         <osgi-export-package>
             org.fuse.usecase.ldap

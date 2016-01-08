@@ -29,7 +29,7 @@
     <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
         <property name="brokerURL" value="tcp://localhost:61616"/>
         <property name="userName" value="admin"/>
-        <property name="password" value="admin"/>
+        <property name="password" value="sunflower"/>
         <property name="redeliveryPolicy">
             <bean class="org.apache.activemq.RedeliveryPolicy">
                 <property name="maximumRedeliveries" value="0"/>
@@ -47,13 +47,11 @@
     <!-- ActiveMQ Camel Component - No Tx -->
     <bean id="amq-notx" class="org.apache.activemq.camel.component.ActiveMQComponent">
         <property name="brokerURL" value="tcp://localhost:61616"/>
-        <property name="userName" value="admin"/>
-        <property name="password" value="admin"/>
         <property name="connectionFactory">
             <bean class="org.apache.activemq.ActiveMQConnectionFactory">
                 <property name="brokerURL" value="tcp://localhost:61616"/>
                 <property name="userName" value="admin"/>
-                <property name="password" value="admin"/>
+                <property name="password" value="sunflower"/>
             </bean>
         </property>
     </bean>

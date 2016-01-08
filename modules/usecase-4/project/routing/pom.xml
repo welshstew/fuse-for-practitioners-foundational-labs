@@ -26,7 +26,6 @@
             org.apache.camel.impl;version="[2.0,3.0)",
             org.apache.camel.spi;version="[2.0,3.0)",
             org.apache.camel.component.dozer;version="[2.0,3.0)",
-            org.fuse.usecase.ldap,
             org.h2,
             *
         </osgi-import-package>
@@ -162,7 +161,7 @@
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-maven-plugin</artifactId>
                 <configuration>
-                    <applicationContextUri>META-INF/spring/*.xml;META-INF/spring/local/activemq-broker.xml</applicationContextUri>
+                    <applicationContextUri>META-INF/spring/*.xml;META-INF/spring/local/activemq-broker.xml,META-INF/spring/local/ldap-server.xml</applicationContextUri>
                 </configuration>
             </plugin>
 

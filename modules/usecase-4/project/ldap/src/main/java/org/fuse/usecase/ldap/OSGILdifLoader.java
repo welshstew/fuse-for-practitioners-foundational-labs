@@ -1,4 +1,4 @@
-package org.fuse.usecase;
+package org.fuse.usecase.ldap;
 
 import org.apache.directory.server.core.api.CoreSession;
 import org.apache.directory.server.i18n.I18n;
