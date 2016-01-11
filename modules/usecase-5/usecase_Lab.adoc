@@ -1,0 +1,127 @@
+== Use Case 5 - xxxxx
+
+The purpose of the use case is to develop some Apache Camel pipeline routes where we will process CSV files, read the CSV records and transform the records to Java Objects.
+Next, we will split the List of the Java Objects to enhance each Java Object using the JBoss Fuse Data Mapper tool. The java object enhanced will be finally transformed into a JSON String that you will
+save into a file.
+
+The DLQ pattern must be implemented to move the "erroneous" CSV records into an error folder (using Exception Strategy and DLQErrorHandler).
+
+.Goals
+* Build an Apache Camel route to consume CSV files and transform the records into Java Objects using the Bindy Transformation component
+* Split the list of the Java Objects received and apply a Java to Java transformation using the Fuse Data Mapper Tool (from org.acme.Customer to org.globex.Account)
+* Map the fields as defined within the table
+* Transform the Java object created (= org.globex.Account) into individual JSON file
+* Implement the DLQ Pattern to move the erroneous CSV record(s) into an error folder
+* Design a unit test to validate the data transformations of the CSV message to JSON
+
+:numbered:
+
+== Import the Project (TODO - Discuss how we will setup the project)
+
+. In JBoss Developer Studio, switch to the *Git* perspective. 
+. Click the icon at the top to clone a Git repository and add the clone to this view.
+. In the *URI* text box, copy and paste the following: 
++
+------
+https://github.com/gpe-mw-training/fuse-for-practitioners-labs.git
+------
++
+. Switch to *Project Explorer* for the *JBoss* perspective.
+. Import a new Maven project by selecting *File -> Import -> Maven -> Existing Maven Projects -> Next*. Import the `core` and it's parent project
+. Navigate to the location of the Git projects for the Data Transformation tool and click *Finish*.
+. Click the *Project Explorer* tab and expand the `Inbound` project node. 
++  
+.Application structure
+image::images/application_structure.png[width="40%"]
+
+. Examine the following files and folders that appear in the expanded view:
+
+* `routing`: module in which you will develop the `route`, `unit test` of the use-case.
+** `src/main/resources/schema` : JSON and csv schemas files you will need to create the Data Transformation
+* `parent` : Contain JBoss Fuse 6.2.1 dependencies, properties definition and maven plugins used by the modules
+* `features` : Apache Karaf XML features file to be used to deploy the `usecase` project on JBoss Fuse without Fabric technology
+
+=== Create the Model class
+
+Use the `src/main/resources/schema/csv/customer.csv` file containing the definition of a CSV record to create the Java class `org.acme.Customer`. The csv fields must be associated
+to Java fields based on the type defined within the csv schema. The position of the field corresponds also to the position of the csv column within the csv record. Specify to Bindy
+that the separator to be used is `,`.
+
+The camel-bindy component is required to compile the code
+
+=== Develop the Routing module
+
+Develop the Apache Camel route consuming the CSV records files and split the content using as token the carriage return character.
+The correctly splitted messages should be send the outbox file endpoint.
+
+File uri inbox endpoint : src/data/inbox?fileName=customers.csv&amp;noop=true
+File uri outbox endpoint : src/data/outbox?fileName=csv-record-${date:now:yyyyMMdd}.txt
+
+=== Define the csv2json data transformation
+
+Within the Fuse Camel editor, drag and drop a "Data Transformation" endpoint to create, using the wizard, a csv2json transformation. Use as input format the Customer Java class created previously and select the
+target model using the `acount.json` file located under the directory `src/main/resources/schema/json/account.json`.
+
+image::images/csv2json.png[]
+
+When the data transformation file has been created, then edit the file to map the Customer fields with their corresponding fields created within the Account, Company and Contact classes.
+
+image::images/csv2json-mapping.png[]
+
+NOTE: By default, the tool will generate the classes under the package name `account` for the json model. You can rename the package to by example `org.globex` instead of the `account` name. If you change the package name, then
+it will be required that you also edit the transformation file to change the location of the classB (= target model) like also the targetModel field within the endpoint added within the Apache Camel Route.
+
+WARNING: As the csv input source is not available as source when you generate the data mapping, then the Bindy dataformat has not been added within the <DataFormats> xml tag of the Apachz Camel
+route. So edit the code source of the Apache Camel route to add the <bindy /> xml tag with the following parameters : id = csv, type = csv and classType="org.acme.Customer".
+Update also the endpoint definition to use this csv data format to unmarshall the content. So, add a unmarshalId parameter.
+
+=== Use the Data Transformation Endpoint
+
+Update the Apache Camel Route to include the data transformation endpoint after the exchanges have been splitted.
+
+=== Add a DLQ strategy
+
+Implement the DLQ pattern using the onException interceptor and move the faulty exchanged to a file error endpoint.
+
+File uri error endpoint : src/data/error?fileName=account-${property.CamelSplitIndex}.json
+Exception type to be tracked by the onException interceptor : java.lang.IllegalArgumentException
+
+=== Develop the JUnit Test
+
+Develop a Junit Test case to validate the csv2json data transformation. Add a new Apache Camel route to produce using the direct component an exchange containing as Body
+a customer csv record and send this exchange to the endpoint responsible to do the thransfoamtion ("csv2json"). the result of that transformation must be consumed by a mock endpoint
+
+Name of the Junit Test class : ValidateTransformationTest
+Mock endpoint uri : mock:csv2json-test-output
+Direct endpoint uri : direct:csv2json-test-input
+
+=== Build the `routing` Project & test it locally
+
+. On the command line, run the following commands:
+
+[source]
+----
+mvn clean install
+mvn camel:run
+----
+
+=== Bonus
+
+Define the features XML file to deploy the project on JBoss Fuse 6.2.1 and test it using these commands to be executed within the Fuse console.
+
+[source]
+----
+addurl mvn:org.fuse.usecase/features/1.0/xml/features
+features:install usecase-camel-bindy-json
+----
+
+Instead of using the features XML file, you can also create a Fabric8 profile by editing the <fabric8.xxxx> xml tags that you have within the pom.xml routing file
+and next execute this command to create the profile into JBoss Fuse Fabric
+
+[source]
+----
+mvn fabric8:deploy
+----
+
+
+
