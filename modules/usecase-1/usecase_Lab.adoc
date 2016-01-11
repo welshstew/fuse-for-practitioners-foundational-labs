@@ -18,7 +18,7 @@ The DLQ pattern must be implemented to move the "erroneous" CSV records into an 
 
 == Import the Project (TODO - Discuss how we will setup the project)
 
-include::./modules/common/instructions.adoc[]
+include::modules/common/instructions.adoc[]
 
 === Create the Model class
 
