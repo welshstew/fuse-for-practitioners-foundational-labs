@@ -1,5 +1,3 @@
-# Instructions to install the skeleton of the project
-
 . In JBoss Developer Studio, switch to the *Git* perspective.
 . Click the icon at the top to clone a Git repository and add the clone to this view.
 +

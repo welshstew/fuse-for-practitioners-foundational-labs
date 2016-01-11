@@ -18,28 +18,7 @@ The DLQ pattern must be implemented to move the "erroneous" CSV records into an 
 
 == Import the Project (TODO - Discuss how we will setup the project)
 
-. In JBoss Developer Studio, switch to the *Git* perspective. 
-. Click the icon at the top to clone a Git repository and add the clone to this view.
-. In the *URI* text box, copy and paste the following: 
-+
-------
-https://github.com/gpe-mw-training/fuse-for-practitioners-labs.git
-------
-+
-. Switch to *Project Explorer* for the *JBoss* perspective.
-. Import a new Maven project by selecting *File -> Import -> Maven -> Existing Maven Projects -> Next*. Import the `core` and it's parent project
-. Navigate to the location of the Git projects for the Data Transformation tool and click *Finish*.
-. Click the *Project Explorer* tab and expand the `Inbound` project node. 
-+  
-.Application structure
-image::images/application_structure.png[width="40%"]
-
-. Examine the following files and folders that appear in the expanded view:
-
-* `routing`: module in which you will develop the `route`, `unit test` of the use-case.
-** `src/main/resources/schema` : JSON and csv schemas files you will need to create the Data Transformation
-* `parent` : Contain JBoss Fuse 6.2.1 dependencies, properties definition and maven plugins used by the modules
-* `features` : Apache Karaf XML features file to be used to deploy the `usecase` project on JBoss Fuse without Fabric technology
+include::../instructions.adoc[]
 
 === Create the Model class
 
