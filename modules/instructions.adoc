@@ -1,0 +1,36 @@
+# Instructions to install the skeleton of the project
+
+. In JBoss Developer Studio, switch to the *Git* perspective.
+. Click the icon at the top to clone a Git repository and add the clone to this view.
++
+.Clone Git Repo
+image::image/git-clone-repo.png[]
++
+. In the *URI* text box, copy and paste the following:
++
+------
+https://github.com/gpe-mw-training/fuse-for-practitioners-foundational-labs
+------
++
+. Select the branch *skeleton* and click on the button *finish*
++
+.Branch selection
+image::image/select-skeleton-branch.png[]
++
+. Right click on the icon of the git repo created within the Git Repositories perspective and select the option *Import Projects*
+ +
+.Import Projects
+image::image/import-projects.png[]
++
+. Within the wizard screen, select the option *Import using New Project Wizard* and click on the button *Finish*
+. Select as project type *Maven project* from the wizard screen
++
+.Maven Project
+image::image/select-maven-projectpng[]
++
+. Click twice on the button *next*
+
+. Click the *Project Explorer* tab and expand the `Inbound` project node.
++
+.Application structure
+image::images/application_structure.png[width="40%"]
