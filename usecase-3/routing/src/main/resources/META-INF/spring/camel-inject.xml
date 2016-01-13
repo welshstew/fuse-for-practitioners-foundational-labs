@@ -10,9 +10,6 @@
     <camelContext trace="false" xmlns="http://camel.apache.org/schema/spring">
         <propertyPlaceholder id="properties" location="fabric8/route.properties"/>
         <route id="file-queue">
-            <!-- Consume files from input dir and copy them as JMS Message on the input queue -->
-            <from uri="file:{{fileInput}}?fileName=customers.csv&amp;noop=true"/>
-            <to uri="amq-notx:{{queueInput}}"/>
         </route>
     </camelContext>
 
