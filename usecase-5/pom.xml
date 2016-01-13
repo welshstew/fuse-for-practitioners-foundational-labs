@@ -11,10 +11,6 @@
     <name>Fuse :: Use Case 5 :: Project</name>
 
     <modules>
-        <module>parent</module>
-        <module>routing</module>
-        <module>features</module>
-        <module>testing</module>
     </modules>
 
 </project>
