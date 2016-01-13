@@ -1,3 +1,11 @@
+# Create skeleton branch
+
+[source]
+----
+git delete branch skeleton
+git checkout -b skeleton solution
+----
+
 # Instructions to sync skeleton git repositories
 
 Execute this command from the git repo "fuse_for_practitioners" to push the *skeleton* branch to the target repository
@@ -15,5 +23,7 @@ Example
 ----
 git push https://github.com/gpe-mw-training/fuse-for-practitioners-foundational-labs.git skeleton
 ----
+
+
 
 
