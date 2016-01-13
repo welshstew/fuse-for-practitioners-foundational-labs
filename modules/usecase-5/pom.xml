@@ -4,18 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.fuse.usecase</groupId>
-    <artifactId>all</artifactId>
+    <groupId>org.fuse.usecase5</groupId>
+    <artifactId>project</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>
-    <name>Fuse :: Use Case :: All</name>
+    <name>Fuse :: Use Case 5 :: Project</name>
 
     <modules>
-        <module>usecase-1</module>
-        <module>usecase-2</module>
-        <module>usecase-3</module>
-        <module>usecase-4</module>
-        <module>usecase-5</module>
+        <module>parent</module>
+        <module>routing</module>
+        <module>features</module>
+        <module>testing</module>
     </modules>
 
 </project>
