@@ -20,7 +20,7 @@ public class JacksonCompanyTest {
         Account account = new Account();
 
         Company company = new Company();
-        company.setName("Robocops");
+        company.setName("Rotobots");
         company.setGeo("NA");
         company.setActive(true);
 
@@ -46,7 +46,7 @@ public class JacksonCompanyTest {
         String json = "{\"company\":{\"name\":\"Rotobots\",\"geo\":\"NA\",\"active\":true},\"contact\":{\"firstName\":\"Bill\",\"lastName\":\"Smith\",\"streetAddr\":\"100 N Park Ave.\",\"city\":\"Phoenix\",\"state\":\"AZ\",\"zip\":\"85017\",\"phone\":\"602-555-1100\"}}";
         Account account = new ObjectMapper().readValue(json,Account.class);
         assertNotNull(account);
-        assertEquals("Robocops",account.getCompany().getName());
+        assertEquals("Rotobots",account.getCompany().getName());
     }
 
 }
