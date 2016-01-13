@@ -45,7 +45,8 @@ public class OnExceptionDLQWithTxSpringRoutesTest extends CamelSpringTestSupport
     private EmbeddedDatabase db;
     private Server server;
 
-    @Before @Override public void setUp() throws Exception {
+    @Before @Override
+    public void setUp() throws Exception {
 
         String HomeDir = System.getProperty("user.home");
         String URL = "jdbc:h2:tcp://localhost:9093" + HomeDir + "/usecaseTestDB";
@@ -65,33 +66,8 @@ public class OnExceptionDLQWithTxSpringRoutesTest extends CamelSpringTestSupport
         super.setUp();
     }
 
-    @Test public void shouldGetMessageWithinDLQ() throws Exception {
-
-/*      We get a ConcurrentException
-       List<RouteDefinition> routes = Collections.synchronizedList(context.getRouteDefinitions());
-        for (RouteDefinition route : routes) {
-            if(route.getId().equals("error-queue")) {
-                // We will extend the route of the error queue to add a mock endpoint
-                route.adviceWith(context, new AdviceWithRouteBuilder() {
-                    @Override
-                    public void configure() throws Exception {
-                        weaveById("log-error-processor").after().to("mock:error");
-                    }
-                });
-            }
-
-            if(route.getId().equals("queue-split-transform-queue")) {
-                // We will append a processor after the endpoint saving the JMS messages within the queue
-                // to check that we will save the messages
-                route.adviceWith(context, new AdviceWithRouteBuilder() {
-                    @Override
-                    public void configure() throws Exception {
-                        weaveById("output-queue-endpoint").after().to("mock:output");
-                    }
-                });
-            }
-
-        }*/
+    @Test
+    public void shouldGetMessageWithinDLQ() throws Exception {
 
         // We will extend the route of the error queue to add a mock endpoint
         context.getRouteDefinition("direct-error-queue").adviceWith(context, new AdviceWithRouteBuilder() {
@@ -147,12 +123,14 @@ public class OnExceptionDLQWithTxSpringRoutesTest extends CamelSpringTestSupport
         assertEquals(records, result);
     }
 
-    @After @Override public void tearDown() throws Exception {
+    @After @Override
+    public void tearDown() throws Exception {
         super.tearDown();
         server.shutdown();
     }
 
-    @Override protected AbstractApplicationContext createApplicationContext() {
+    @Override
+    protected AbstractApplicationContext createApplicationContext() {
         return new ClassPathXmlApplicationContext("META-INF/spring/local/activemq-broker.xml",
                 "META-INF/spring/camel-context.xml");
     }
