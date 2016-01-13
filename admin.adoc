@@ -1,2 +1,19 @@
 # Instructions to sync skeleton git repositories
 
+Execute this command from the git repo "fuse_for_practitioners" to push the *skeleton* branch to the target repository
+
+[source]
+----
+git push https://github.com/gpe-mw-training/<target_repo>.git <branch>
+
+where <branch> = skeleton and <target_repo> = fuse-for-practitioners-foundational-labs
+----
+
+Example
+
+[source]
+----
+git push https://github.com/gpe-mw-training/fuse-for-practitioners-foundational-labs.git skeleton
+----
+
+
