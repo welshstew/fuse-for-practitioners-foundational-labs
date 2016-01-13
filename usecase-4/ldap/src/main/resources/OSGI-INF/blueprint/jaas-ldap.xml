@@ -4,21 +4,6 @@
            xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0">
 
     <jaas:config name="LDAPLogin" rank="1">
-        <jaas:module className="org.apache.karaf.jaas.modules.ldap.LDAPLoginModule"
-                     flags="required">
-            initialContextFactory=com.sun.jndi.ldap.LdapCtxFactory
-            connection.username=uid=admin,ou=User,ou=ActiveMQ,ou=system
-            connection.password=sunflower
-            connection.protocol=s
-            connection.url=ldap://127.0.0.1:33389
-            authentication=simple
-            user.base.dn=ou=User,ou=ActiveMQ,ou=system
-            user.filter=(uid=%u)
-            user.search.subtree=false
-            role.base.dn=ou=Group,ou=ActiveMQ,ou=system
-            role.filter=(member= uid=%u)
-            role.name.attribute=cn
-            role.search.subtree=true
-        </jaas:module>
+
     </jaas:config>
 </blueprint>

@@ -14,30 +14,13 @@
             <policyMap>
                 <policyEntries>
                     <policyEntry queue=">">
-                        <deadLetterStrategy>
-                            <individualDeadLetterStrategy queuePrefix="DLQ." useQueueForQueueMessages="true"/>
-                        </deadLetterStrategy>
                     </policyEntry>
                 </policyEntries>
             </policyMap>
         </destinationPolicy>
 
         <plugins>
-            <jaasAuthenticationPlugin configuration="LDAPLogin"/>
-            <authorizationPlugin>
-                <map>
-                    <cachedLDAPAuthorizationMap
-                            connectionURL="ldap://localhost:33389"
-                            queueSearchBase="ou=Queue,ou=Destination,ou=ActiveMQ,ou=system"
-                            topicSearchBase="ou=Topic,ou=Destination,ou=ActiveMQ,ou=system"
-                            tempSearchBase="ou=Temp,ou=Destination,ou=ActiveMQ,ou=system"
-                            adminPermissionGroupSearchFilter="(cn=admin)"
-                            writePermissionGroupSearchFilter="(cn=write)"
-                            readPermissionGroupSearchFilter="(cn=read)"
-                            legacyGroupMapping="true"
-                    />
-                </map>
-            </authorizationPlugin>
+
         </plugins>
 
         <transportConnectors>
