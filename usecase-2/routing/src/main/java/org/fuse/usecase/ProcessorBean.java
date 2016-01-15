@@ -21,7 +21,7 @@ public class ProcessorBean {
     public void convertEntityToString(Exchange exchange) throws IOException {
         int c;
         StringBuffer buf = new StringBuffer();
-        String response
+        String response = null;
 
 
 
