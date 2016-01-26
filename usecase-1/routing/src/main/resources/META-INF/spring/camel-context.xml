@@ -7,7 +7,40 @@
        http://camel.apache.org/schema/spring
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-    <camelContext trace="false" xmlns="http://camel.apache.org/schema/spring">
-        <propertyPlaceholder id="properties" location="fabric8/route.properties"/>
+    <bean id="breakBean" class="org.BreakBean"/>
+
+    <bean id="myDeadLetterErrorHandler" class="org.apache.camel.builder.DeadLetterChannelBuilder">
+        <property name="deadLetterUri" value="file://{{fileError}}"/>
+        <property name="redeliveryPolicy" ref="myRedeliveryPolicyConfig"/>
+    </bean>
+
+    <bean id="myRedeliveryPolicyConfig" class="org.apache.camel.processor.RedeliveryPolicy">
+        <property name="maximumRedeliveries" value="2"/>
+        <property name="redeliveryDelay" value="500"/>
+    </bean>
+
+
+    <camelContext trace="false" xmlns="http://camel.apache.org/schema/spring"
+                  errorHandlerRef="myDeadLetterErrorHandler">
+
+        <propertyPlaceholder location="fabric8/route.properties" id="properties"/>
+
+        <dataFormats>
+            <bindy id="bindy1" type="Csv" classType="org.acme.Customer"/>
+        </dataFormats>
+
+        <route id="customerInput">
+            <from uri="file://{{fileInput}}"/>
+            <split>
+                <tokenize token="\n"/>
+                <unmarshal ref="bindy1"/>
+                <transform>
+                    <groovy>resource:classpath:transform.groovy</groovy>
+                </transform>
+                <log message="${body}"/>
+                <to uri="file://{{fileOutput}}"/>
+            </split>
+        </route>
+
     </camelContext>
 </beans>

@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.springframework.context.support.AbstractXmlApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -23,10 +24,16 @@ public class ValidateTransformationTest extends CamelSpringTestSupport {
 
     @Test
     public void transform() throws Exception {
-        // setup expectations
 
+        File resourcesDirectory = new File("src/test/resources");
+        // setup expectations
+        String account0 = readFile(resourcesDirectory.getAbsolutePath() + "/account-0.json");
+        String account1 = readFile(resourcesDirectory.getAbsolutePath() + "/account-1.json");
+        String account2 = readFile(resourcesDirectory.getAbsolutePath() + "/account-2.json");
         // set expected body as the unpretty print version of the json
         // (flattened)
+
+
 
         // run test
 
@@ -39,6 +46,7 @@ public class ValidateTransformationTest extends CamelSpringTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() throws Exception {
+                
             }
         };
     }
