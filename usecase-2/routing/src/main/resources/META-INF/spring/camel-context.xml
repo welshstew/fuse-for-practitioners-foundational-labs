@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:cxf="http://camel.apache.org/schema/cxf"
-       xsi:schemaLocation="
-       http://www.springframework.org/schema/beans
+       xmlns:cxf="http://camel.apache.org/schema/cxf" xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://camel.apache.org/schema/cxf
        http://camel.apache.org/schema/cxf/camel-cxf-spring.xsd
        http://camel.apache.org/schema/spring
-       http://camel.apache.org/schema/spring/camel-spring.xsd">
+       http://camel.apache.org/schema/spring/camel-spring.xsd http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
     <!-- H2 Datasource -->
     <bean id="usecaseDB" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -23,16 +22,62 @@
 
     </bean>
 
+    <bean id="customerServiceRESTImpl" class="org.fuse.usecase.service.CustomerRestImpl" />
+
     <cxf:cxfEndpoint id="customerWebService">
     </cxf:cxfEndpoint>
 
-    <cxf:rsServer id="customerRestService">
-    </cxf:rsServer>
+    <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider"/>
 
-    <cxf:rsClient id="customerRestServiceClient">
+    <jaxrs:server id="customerService" address="http://localhost:9191/rest">
+        <jaxrs:serviceBeans>
+            <ref bean="customerRestServiceImpl"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="jsonProvider" />
+        </jaxrs:providers>
+    </jaxrs:server>
+
+    <bean id="customerRestServiceImpl" class="org.fuse.usecase.service.CustomerRestImpl"/>
+
+    <!--<cxf:rsClient id="customerRestServiceClient">-->
+    <!--</cxf:rsClient>-->
+
+    <cxf:rsClient id="customerRestServiceClient" address="http://localhost:9191/rest"
+                  serviceClass="org.fuse.usecase.service.CustomerRest"
+                  loggingFeatureEnabled="true" skipFaultLogging="true">
+        <cxf:providers>
+            <ref bean="jsonProvider"/>
+        </cxf:providers>
     </cxf:rsClient>
 
     <camelContext trace="false" xmlns="http://camel.apache.org/schema/spring">
         <propertyPlaceholder id="properties" location="fabric8/route.properties"/>
+
+
+        <!--<route id="rsService">-->
+            <!--<from uri="cxfrs://bean://customerRestService"/>-->
+            <!--<to uri="log:body?level=INFO"/>-->
+            <!--<to uri="direct:callRestEndpoint" />-->
+        <!--</route>-->
+
+        <route>
+            <from uri="timer://foo?period=5000"/>
+            <to uri="direct:callRestEndpoint" />
+        </route>
+
+        <route>
+            <from uri="direct:callRestEndpoint" />
+            <setBody>
+                <constant></constant>
+            </setBody>
+
+        </route>
+
+        <route id="directWSCall">
+            <from uri="direct:callWSEndpoint"/>
+            <to uri="log:hello"/>
+        </route>
+
     </camelContext>
 </beans>

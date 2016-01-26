@@ -18,7 +18,27 @@ public class CustomerRestImpl implements CustomerRest {
         Company company = account.getCompany();
         String region = company.getGeo();
 
+        if(region.equalsIgnoreCase("na")){
+            company.setGeo(NA_REGION);
+        }
+
+        if(region.equalsIgnoreCase("sa")){
+            company.setGeo(SA_REGION);
+        }
+
+        if(region.equalsIgnoreCase("wa")){
+            company.setGeo(WE_REGION);
+        }
+
+        if(region.equalsIgnoreCase("ea")){
+            company.setGeo(EAST_REGION);
+        }
 
         return account;
+    }
+
+    @Override
+    public String hello() {
+        return "hello";
     }
 }

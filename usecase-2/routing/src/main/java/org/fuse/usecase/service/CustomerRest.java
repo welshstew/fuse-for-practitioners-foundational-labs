@@ -13,4 +13,8 @@ public interface CustomerRest {
     @Consumes("application/json")
     Account enrich(Account customer);
 
+    @GET
+    @Path("/")
+    String hello();
+
 }
