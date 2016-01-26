@@ -33,14 +33,21 @@
             <from uri="file://{{fileInput}}"/>
             <split>
                 <tokenize token="\n"/>
-                <unmarshal ref="bindy1"/>
-                <transform>
-                    <groovy>resource:classpath:transform.groovy</groovy>
-                </transform>
-                <log message="${body}"/>
+                <to uri="direct:doTransform" />
                 <to uri="file://{{fileOutput}}"/>
             </split>
         </route>
+
+        <route id="doTransform">
+            <!-- expected input is a csv line -->
+            <from uri="direct:doTransform" />
+            <unmarshal ref="bindy1"/>
+            <transform>
+                <groovy>resource:classpath:transform.groovy</groovy>
+            </transform>
+            <log message="${body}"/>
+        </route>
+
 
     </camelContext>
 </beans>

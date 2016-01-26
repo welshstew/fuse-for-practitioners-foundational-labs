@@ -31,11 +31,18 @@ public class ValidateTransformationTest extends CamelSpringTestSupport {
         String account1 = readFile(resourcesDirectory.getAbsolutePath() + "/account-1.json");
         String account2 = readFile(resourcesDirectory.getAbsolutePath() + "/account-2.json");
         // set expected body as the unpretty print version of the json
+
+        String csvLine1 = "Rotobots,NA,true,Bill,Smith,100 N Park Ave.,Phoenix,AZ,85017,602-555-1100";
         // (flattened)
 
-
-
         // run test
+
+        ProducerTemplate pt = this.context.createProducerTemplate();
+        Object output = pt.requestBody("direct:doTransform", csvLine1);
+
+        String hello = "";
+
+        assertEquals(account0, output.toString());
 
 
         // verify results
@@ -46,7 +53,7 @@ public class ValidateTransformationTest extends CamelSpringTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             public void configure() throws Exception {
-                
+
             }
         };
     }
