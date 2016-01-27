@@ -3,13 +3,10 @@ package org.fuse.usecase.routebuilder;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.cxf.CxfEndpoint;
 import org.apache.camel.component.cxf.common.message.CxfConstants;
 import org.apache.camel.component.jackson.JacksonDataFormat;
-import org.apache.camel.model.dataformat.JsonLibrary;
-import org.apache.camel.spi.DataFormat;
-import org.fuse.usecase.ProcessorBean;
 import org.fuse.usecase.aggregate.UseCase2AggregationStrategy;
+import org.fuse.usecase.processor.SqlParameterProcessorBean;
 import org.fuse.usecase.service.CustomerRestImpl;
 import org.fuse.usecase.service.CustomerWSImpl;
 import org.globex.Account;
@@ -47,7 +44,8 @@ public class UseCase2RouteBuilder extends RouteBuilder {
     Endpoint insertIntoDBEndpoint;
 
     CustomerWSImpl wsImpl = new CustomerWSImpl();
-    ProcessorBean sqlParameterBean = new ProcessorBean();
+
+    SqlParameterProcessorBean sqlParameterBean = new SqlParameterProcessorBean();
 
 
     @Override
@@ -79,7 +77,8 @@ public class UseCase2RouteBuilder extends RouteBuilder {
                     }
                 })
                 .multicast(new UseCase2AggregationStrategy()).to(directCallWS, directCallREST)
-                .end();
+                .end()
+                .to(insertIntoDBEndpoint);
 
         from(directCallREST)
                 .setHeader(Exchange.ACCEPT_CONTENT_TYPE, constant("application/json"))
@@ -103,7 +102,8 @@ public class UseCase2RouteBuilder extends RouteBuilder {
 
         from(insertIntoDBEndpoint)
                 .bean(sqlParameterBean, "defineNamedParameters")
-                .to("sql:INSERT INTO USECASE.T_ACCOUNT (CLIENT_ID,SALES_CONTACT,COMPANY_NAME,COMPANY_GEO,COMPANY_ACTIVE,CONTACT_FIRST_NAME,CONTACT_LAST_NAME,CONTACT_ADDRESS,CONTACT_CITY,CONTACT_STATE,CONTACT_ZIP,CONTACT_PHONE,CREATION_DATE,CREATION_USER) VALUES (:#CLIENT_ID,:#SALES_CONTACT,:#COMPANY_NAME,:#COMPANY_GEO,:#COMPANY_ACTIVE,:#CONTACT_FIRST_NAME,:#CONTACT_LAST_NAME,:#CONTACT_ADDRESS,:#CONTACT_CITY,:#CONTACT_STATE,:#CONTACT_ZIP,:#CONTACT_PHONE,:#CREATION_DATE,:#CREATION_USER)");
+                .to("sql:INSERT INTO USECASE.T_ACCOUNT (CLIENT_ID,SALES_CONTACT,COMPANY_NAME,COMPANY_GEO,COMPANY_ACTIVE,CONTACT_FIRST_NAME,CONTACT_LAST_NAME,CONTACT_ADDRESS,CONTACT_CITY,CONTACT_STATE,CONTACT_ZIP,CONTACT_PHONE,CREATION_DATE,CREATION_USER) VALUES (:#CLIENT_ID,:#SALES_CONTACT,:#COMPANY_NAME,:#COMPANY_GEO,:#COMPANY_ACTIVE,:#CONTACT_FIRST_NAME,:#CONTACT_LAST_NAME,:#CONTACT_ADDRESS,:#CONTACT_CITY,:#CONTACT_STATE,:#CONTACT_ZIP,:#CONTACT_PHONE,:#CREATION_DATE,:#CREATION_USER)")
+                .log("Inserted into DB!");
 
     }
 

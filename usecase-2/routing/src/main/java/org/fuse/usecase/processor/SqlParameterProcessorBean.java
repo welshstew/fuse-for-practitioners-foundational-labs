@@ -1,4 +1,4 @@
-package org.globex.usecase;
+package org.fuse.usecase.processor;
 
 import org.apache.camel.Body;
 import org.apache.camel.Exchange;
@@ -10,7 +10,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProcessorBean {
+public class SqlParameterProcessorBean {
 
     public void convertEntityToString(Exchange exchange) throws IOException {
         int c;
