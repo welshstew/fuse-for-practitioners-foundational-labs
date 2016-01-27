@@ -59,12 +59,7 @@ public class UseCase2RouteBuilder extends RouteBuilder {
                 .bean(CustomerRestImpl.class, "enrich");
 
         from(customerSOAPServiceEndpoint)
-                .process(new Processor() {
-                    @Override
-                    public void process(Exchange exchange) throws Exception {
-                        String  hello = "";
-                    }
-                }).bean(wsImpl, "updateAccount");
+                .bean(wsImpl, "updateAccount");
 
         from(jsonFileInput).routeId("mainJsonFileRoute")
                 .convertBodyTo(String.class)
@@ -89,16 +84,7 @@ public class UseCase2RouteBuilder extends RouteBuilder {
         from(directCallWS)
                 .setHeader(CxfConstants.OPERATION_NAME, constant("updateAccount"))
                 .setHeader(CxfConstants.OPERATION_NAMESPACE, constant("http://service.usecase.fuse.org/"))
-                .log("hello")
                 .to("cxf:bean:customerServiceEndpoint");
-
-//        from("direct:projects")
-//                .setHeader("lic", constant("ASF"))
-//                .setHeader("min", constant(123))
-//                .to("sql:select * from projects where license = :#lic and id > :#min order by id")
-
-//        INSERT INTO USECASE.T_ACCOUNT (CLIENT_ID,SALES_CONTACT,COMPANY_NAME,COMPANY_GEO,COMPANY_ACTIVE,CONTACT_FIRST_NAME,CONTACT_LAST_NAME,CONTACT_ADDRESS,CONTACT_CITY,CONTACT_STATE,CONTACT_ZIP,CONTACT_PHONE,CREATION_DATE,CREATION_USER) VALUES ('95','Rachel Cassidy','MountainBikers','SOUTH_AMERICA',true,'George','Jungle','1101 Smith St.','Raleigh','NC','27519','919-555-0800','2015-12-15','fuse_usecase');
-
 
         from(insertIntoDBEndpoint)
                 .bean(sqlParameterBean, "defineNamedParameters")
