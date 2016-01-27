@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import org.apache.camel.*;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.cxf.CxfEndpoint;
+import org.apache.camel.component.cxf.common.message.CxfConstants;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.spi.DataFormat;
@@ -71,16 +72,11 @@ public class UseCase2RouteBuilder extends RouteBuilder {
 
         from(directCallREST)
                 .setHeader("Content-Type", constant("application/json"))
-                .setHeader("Accept", constant("application/json"))
+                .setHeader(Exchange.ACCEPT_CONTENT_TYPE, constant("application/json"))
+                .setHeader(CxfConstants.OPERATION_NAME, constant("enrich"))
+                .setHeader(CxfConstants.CAMEL_CXF_RS_USING_HTTP_API, constant(false))
                 .log("HELLO1")
                 .to("cxfrs:bean:customerRestServiceClient");
-//                .process(new Processor() {
-//                    @Override
-//                    public void process(Exchange exchange) throws Exception {
-//                        String hi = "";
-//                    }
-//                })
-//                .to("cxfrs:bean:customerRestServiceClient");
 
         from(directCallWS)
                 .log("HELLO2");
