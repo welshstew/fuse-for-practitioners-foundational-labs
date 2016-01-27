@@ -86,7 +86,7 @@ public class UseCase2RouteBuilder extends RouteBuilder {
                 .setHeader(CxfConstants.OPERATION_NAMESPACE, constant("http://service.usecase.fuse.org/"))
                 .to("cxf:bean:customerServiceEndpoint");
 
-        from(insertIntoDBEndpoint)
+        from(insertIntoDBEndpoint).routeId("dbInsert")
                 .bean(sqlParameterBean, "defineNamedParameters")
                 .to("sql:INSERT INTO USECASE.T_ACCOUNT (CLIENT_ID,SALES_CONTACT,COMPANY_NAME,COMPANY_GEO,COMPANY_ACTIVE,CONTACT_FIRST_NAME,CONTACT_LAST_NAME,CONTACT_ADDRESS,CONTACT_CITY,CONTACT_STATE,CONTACT_ZIP,CONTACT_PHONE,CREATION_DATE,CREATION_USER) VALUES (:#CLIENT_ID,:#SALES_CONTACT,:#COMPANY_NAME,:#COMPANY_GEO,:#COMPANY_ACTIVE,:#CONTACT_FIRST_NAME,:#CONTACT_LAST_NAME,:#CONTACT_ADDRESS,:#CONTACT_CITY,:#CONTACT_STATE,:#CONTACT_ZIP,:#CONTACT_PHONE,:#CREATION_DATE,:#CREATION_USER)")
                 .log("Inserted into DB!");
