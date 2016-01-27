@@ -8,6 +8,7 @@ import org.apache.camel.component.cxf.common.message.CxfConstants;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.spi.DataFormat;
+import org.fuse.usecase.ProcessorBean;
 import org.fuse.usecase.aggregate.UseCase2AggregationStrategy;
 import org.fuse.usecase.service.CustomerRestImpl;
 import org.fuse.usecase.service.CustomerWSImpl;
@@ -42,7 +43,11 @@ public class UseCase2RouteBuilder extends RouteBuilder {
     @EndpointInject(uri="cxf:bean:customerServiceEndpoint")
     Endpoint customerSOAPServiceEndpoint;
 
+    @EndpointInject(uri="direct:insertDB")
+    Endpoint insertIntoDBEndpoint;
+
     CustomerWSImpl wsImpl = new CustomerWSImpl();
+    ProcessorBean sqlParameterBean = new ProcessorBean();
 
 
     @Override
@@ -87,6 +92,18 @@ public class UseCase2RouteBuilder extends RouteBuilder {
                 .setHeader(CxfConstants.OPERATION_NAMESPACE, constant("http://service.usecase.fuse.org/"))
                 .log("hello")
                 .to("cxf:bean:customerServiceEndpoint");
+
+//        from("direct:projects")
+//                .setHeader("lic", constant("ASF"))
+//                .setHeader("min", constant(123))
+//                .to("sql:select * from projects where license = :#lic and id > :#min order by id")
+
+//        INSERT INTO USECASE.T_ACCOUNT (CLIENT_ID,SALES_CONTACT,COMPANY_NAME,COMPANY_GEO,COMPANY_ACTIVE,CONTACT_FIRST_NAME,CONTACT_LAST_NAME,CONTACT_ADDRESS,CONTACT_CITY,CONTACT_STATE,CONTACT_ZIP,CONTACT_PHONE,CREATION_DATE,CREATION_USER) VALUES ('95','Rachel Cassidy','MountainBikers','SOUTH_AMERICA',true,'George','Jungle','1101 Smith St.','Raleigh','NC','27519','919-555-0800','2015-12-15','fuse_usecase');
+
+
+        from(insertIntoDBEndpoint)
+                .bean(sqlParameterBean, "defineNamedParameters")
+                .to("sql:INSERT INTO USECASE.T_ACCOUNT (CLIENT_ID,SALES_CONTACT,COMPANY_NAME,COMPANY_GEO,COMPANY_ACTIVE,CONTACT_FIRST_NAME,CONTACT_LAST_NAME,CONTACT_ADDRESS,CONTACT_CITY,CONTACT_STATE,CONTACT_ZIP,CONTACT_PHONE,CREATION_DATE,CREATION_USER) VALUES (:#CLIENT_ID,:#SALES_CONTACT,:#COMPANY_NAME,:#COMPANY_GEO,:#COMPANY_ACTIVE,:#CONTACT_FIRST_NAME,:#CONTACT_LAST_NAME,:#CONTACT_ADDRESS,:#CONTACT_CITY,:#CONTACT_STATE,:#CONTACT_ZIP,:#CONTACT_PHONE,:#CREATION_DATE,:#CREATION_USER)");
 
     }
 

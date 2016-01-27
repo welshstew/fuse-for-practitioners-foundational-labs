@@ -51,6 +51,7 @@ public class CustomerWSImpl implements CustomerWS {
         ca.setCompany(account.getCompany());
         ca.setContact(account.getContact());
         ca.setSalesContact(getRandomSales(sales));
+        ca.setId(genRandom());
 
         return ca;
     }

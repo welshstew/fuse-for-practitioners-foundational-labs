@@ -1,16 +1,10 @@
-package org.fuse.usecase;
+package org.globex.usecase;
 
 import org.apache.camel.Body;
 import org.apache.camel.Exchange;
-import org.apache.camel.Message;
-import org.apache.cxf.jaxrs.impl.ResponseImpl;
-import org.apache.cxf.message.MessageContentsList;
 import org.globex.Account;
-import org.globex.CorporateAccount;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.SequenceInputStream;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -50,7 +44,7 @@ public class ProcessorBean {
     private static Timestamp getCurrentTime() {
         Calendar calendar = Calendar.getInstance();
         java.util.Date now = calendar.getTime();
-        java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(now.getTime());
+        Timestamp currentTimestamp = new Timestamp(now.getTime());
         return currentTimestamp;
     }
 }
