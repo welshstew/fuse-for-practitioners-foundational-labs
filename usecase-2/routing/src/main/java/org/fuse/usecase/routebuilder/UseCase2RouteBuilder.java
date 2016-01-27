@@ -49,12 +49,6 @@ public class UseCase2RouteBuilder extends RouteBuilder {
         jdf.disableFeature(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
 
         from(customerRESTServiceEndpoint).setExchangePattern(ExchangePattern.InOut)
-                .process(new Processor() {
-                    @Override
-                    public void process(Exchange exchange) throws Exception {
-                        String hi ="";
-                    }
-                })
                 .bean(CustomerRestImpl.class, "enrich");
 
         from(jsonFileInput).routeId("mainJsonFileRoute")
@@ -75,7 +69,6 @@ public class UseCase2RouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.ACCEPT_CONTENT_TYPE, constant("application/json"))
                 .setHeader(CxfConstants.OPERATION_NAME, constant("enrich"))
                 .setHeader(CxfConstants.CAMEL_CXF_RS_USING_HTTP_API, constant(false))
-                .log("HELLO1")
                 .to("cxfrs:bean:customerRestServiceClient");
 
         from(directCallWS)
