@@ -1,6 +1,7 @@
 package org.fuse.usecase.service;
 
 import org.globex.Account;
+import org.globex.Contact;
 import org.globex.CorporateAccount;
 
 import javax.jws.WebMethod;
@@ -36,11 +37,20 @@ public class CustomerWSImpl implements CustomerWS {
         sales.add("Steve Perry");
     }
 
+//    Base on the Account POJO received, you will create a CorporateAccount POJO containing the same fields as
+//    the Account plus 2 additional fields; id (int) and salesContact (String) that you will use to set a random
+//    value created with the range values (1 to 100) and where the salesContact field will be populated randomly
+//    too using a List of Contacts. The CorporateAccount is returned by the updateAccount method implemented
+//    within the class CustomerWSImpl
+//
     @WebResult(name = "CorporateAccount")
     @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
     public CorporateAccount updateAccount(Account account) {
         CorporateAccount ca = new CorporateAccount();
 
+        ca.setCompany(account.getCompany());
+        ca.setContact(account.getContact());
+        ca.setSalesContact(getRandomSales(sales));
 
         return ca;
     }
