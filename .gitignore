@@ -31,3 +31,4 @@ styles/
 **/activemq-data
 
 
+*.camelLock

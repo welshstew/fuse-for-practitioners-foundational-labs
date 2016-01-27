@@ -85,9 +85,8 @@ public class UseCase2RouteBuilder extends RouteBuilder {
         from(directCallWS)
                 .setHeader(CxfConstants.OPERATION_NAME, constant("updateAccount"))
                 .setHeader(CxfConstants.OPERATION_NAMESPACE, constant("http://service.usecase.fuse.org/"))
-                .log("hello");
-//                .to("cxf:customerWebService?serviceClass=org.fuse.usecase.service.CustomerWS");
-
+                .log("hello")
+                .to("cxf:bean:customerServiceEndpoint");
 
     }
 
