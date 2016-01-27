@@ -2,12 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:cxf="http://camel.apache.org/schema/cxf" xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://camel.apache.org/schema/cxf
        http://camel.apache.org/schema/cxf/camel-cxf-spring.xsd
        http://camel.apache.org/schema/spring
-       http://camel.apache.org/schema/spring/camel-spring.xsd http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
+       http://camel.apache.org/schema/spring/camel-spring.xsd http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
     <!-- H2 Datasource -->
     <bean id="usecaseDB" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -22,26 +23,29 @@
 
     </bean>
 
-    <bean id="customerServiceRESTImpl" class="org.fuse.usecase.service.CustomerRestImpl" />
+    <!-- BEGIN SOAP WS -->
 
-    <cxf:cxfEndpoint id="customerWebService">
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+
+    <jaxws:endpoint
+            xmlns:customer="http://demo.fusesource.com/wsdl/CustomerService/"
+            id="customerService"
+            address="http://0.0.0.0:9090/ws/customerService"
+            serviceName="customer:CustomerService"
+            endpointName="customer:SOAPOverHTTP"
+            implementor="#customerServiceImpl">
+    </jaxws:endpoint>
+
+    <bean id="customerServiceImpl"
+          class="org.fuse.usecase.service.CustomerWSImpl"/>
+
+    <cxf:cxfEndpoint id="customerWebService" address="http://localhost:9090/ws/customerService"
+     serviceClass="org.fuse.usecase.service.CustomerWS"  loggingFeatureEnabled="true" >
     </cxf:cxfEndpoint>
 
+    <!-- END SOAP WS -->
+
     <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider"/>
-
-    <!--<jaxrs:server id="customerService" address="http://localhost:9191/rest">-->
-        <!--<jaxrs:serviceBeans>-->
-            <!--<ref bean="customerRestServiceImpl"/>-->
-        <!--</jaxrs:serviceBeans>-->
-        <!--<jaxrs:providers>-->
-            <!--<ref bean="jsonProvider" />-->
-        <!--</jaxrs:providers>-->
-    <!--</jaxrs:server>-->
-
-    <bean id="customerRestServiceImpl" class="org.fuse.usecase.service.CustomerRestImpl"/>
-
-    <!--<cxf:rsClient id="customerRestServiceClient">-->
-    <!--</cxf:rsClient>-->
 
     <!-- Defined the server endpoint to create the cxf-rs consumer -->
     <cxf:rsServer id="customerRestService" address="http://localhost:9191/rest"
@@ -60,9 +64,12 @@
         </cxf:providers>
     </cxf:rsClient>
 
+    <bean id="useCase2RouteBuilder" class="org.fuse.usecase.routebuilder.UseCase2RouteBuilder" />
+
     <camelContext trace="false" xmlns="http://camel.apache.org/schema/spring">
         <propertyPlaceholder id="properties" location="fabric8/route.properties"/>
 
+        <routeBuilder ref="useCase2RouteBuilder" />
 
         <!--<route id="rsService">-->
             <!--<from uri="cxfrs://bean://customerRestService"/>-->
@@ -70,10 +77,19 @@
             <!--<to uri="direct:callRestEndpoint" />-->
         <!--</route>-->
 
-        <route>
-            <from uri="cxfrs:bean:customerRestService"/>
-            <to uri="log:hello"/>
-        </route>
+        <!--<route>-->
+            <!--<from uri="cxfrs:bean:customerRestService"/>-->
+            <!--<bean ref="customerRestServiceImpl" method="enrich"/>-->
+            <!--&lt;!&ndash;<transform>&ndash;&gt;-->
+                <!--&lt;!&ndash;<groovy>request = groovy.json.JsonOutput.toJson(request)</groovy>&ndash;&gt;-->
+            <!--&lt;!&ndash;</transform>&ndash;&gt;-->
+            <!--<to uri="log:hello"/>-->
+        <!--</route>-->
+
+        <!--<route>-->
+            <!--<from uri="cxf:customerWebService?serviceClass=org.fuse.usecase.service.CustomerWS" />-->
+            <!--<to uri="log:stuff" />-->
+        <!--</route>-->
 
         <!--<route>-->
             <!--<from uri="timer://foo?period=5000"/>-->
@@ -105,11 +121,6 @@
             <!--<bean ref="customerRestServiceClient" method="enrich" />-->
 
         <!--</route>-->
-
-        <route id="directWSCall">
-            <from uri="direct:callWSEndpoint"/>
-            <to uri="log:hello"/>
-        </route>
 
     </camelContext>
 </beans>
