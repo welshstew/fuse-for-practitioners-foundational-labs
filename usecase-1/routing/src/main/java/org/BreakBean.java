@@ -10,6 +10,8 @@ public class BreakBean implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
 
-        String hello = "";
+        String hello = "asdsad";
+        
+        String thing = hello + " ";
     }
 }

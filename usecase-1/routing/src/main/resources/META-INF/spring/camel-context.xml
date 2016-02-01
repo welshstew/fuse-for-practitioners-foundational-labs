@@ -18,36 +18,42 @@
         <property name="maximumRedeliveries" value="2"/>
         <property name="redeliveryDelay" value="500"/>
     </bean>
+    
+    <bean id="myRouteBuilder" class="org.routebuilder.MyJavaRouteBuilder" />
 
 
-    <camelContext trace="false" xmlns="http://camel.apache.org/schema/spring"
-                  errorHandlerRef="myDeadLetterErrorHandler">
-
-        <propertyPlaceholder location="fabric8/route.properties" id="properties"/>
-
-        <dataFormats>
-            <bindy id="bindy1" type="Csv" classType="org.acme.Customer"/>
-        </dataFormats>
-
-        <route id="customerInput">
-            <from uri="file://{{fileInput}}"/>
-            <split>
-                <tokenize token="\n"/>
-                <to uri="direct:doTransform" />
-                <to uri="file://{{fileOutput}}"/>
-            </split>
-        </route>
-
-        <route id="doTransform">
-            <!-- expected input is a csv line -->
-            <from uri="direct:doTransform" />
-            <unmarshal ref="bindy1"/>
-            <transform>
-                <groovy>resource:classpath:transform.groovy</groovy>
-            </transform>
-            <log message="${body}"/>
-        </route>
-
-
-    </camelContext>
+    <!-- expected input is a csv line -->
+    
+    <camelContext trace="false" errorHandlerRef="myDeadLetterErrorHandler" id="context-332b70f6-678f-4a1b-808b-49995e0e4afe" xmlns="http://camel.apache.org/schema/spring">
+  <propertyPlaceholder location="fabric8/route.properties" id="properties"/>
+  <routeBuilder ref="myRouteBuilder"/>
+  <dataFormats>
+    <bindy type="Csv" classType="org.acme.Customer" id="bindy1"/>
+  </dataFormats>
+  <route id="customerInput">
+    <from uri="file://{{fileInput}}"/>
+    <split id="split1">
+      <tokenize token="\n"></tokenize>
+      <to uri="direct:doTransform"/>
+      <to uri="file://{{fileOutput}}"/>
+    </split>
+  </route>
+  <route id="hello1">
+    <from uri="timer:hello1?period=5000"/>
+    <log message="hello1 world"/>
+  </route>
+  <route id="hello2">
+    <from uri="timer:hello2?period=5000"/>
+    <log message="hello2 world" loggingLevel="DEBUG"/>
+  </route>
+  <route id="doTransform">
+    <from uri="direct:doTransform"/>
+    <process ref="breakBean"/>
+    <unmarshal ref="bindy1"/>
+    <transform>
+      <groovy>resource:classpath:transform.groovy</groovy>
+    </transform>
+    <log message="${body}"/>
+  </route>
+</camelContext>
 </beans>

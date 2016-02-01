@@ -15,14 +15,22 @@
             <policyMap>
                 <policyEntries>
                     <policyEntry queue=">">
-
+                        <deadLetterStrategy>
+                            <individualDeadLetterStrategy
+                                    queuePrefix="DLQ." useQueueForQueueMessages="true" />
+                        </deadLetterStrategy>
                     </policyEntry>
                 </policyEntries>
             </policyMap>
         </destinationPolicy>
 
         <plugins>
-
+            <simpleAuthenticationPlugin>
+                <users>
+                    <authenticationUser username="admin" password="admin"
+                                        groups="users,admins"/>
+                </users>
+            </simpleAuthenticationPlugin>
         </plugins>
 
         <transportConnectors>

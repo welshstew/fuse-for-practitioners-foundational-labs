@@ -84,7 +84,7 @@ public class UseCase2RouteBuilder extends RouteBuilder {
         from(directCallWS)
                 .setHeader(CxfConstants.OPERATION_NAME, constant("updateAccount"))
                 .setHeader(CxfConstants.OPERATION_NAMESPACE, constant("http://service.usecase.fuse.org/"))
-                .to("cxf:bean:customerServiceEndpoint");
+                .to("cxf:bean:customerServiceEndpoint?dataFormat=POJO");
 
         from(insertIntoDBEndpoint).routeId("dbInsert")
                 .bean(sqlParameterBean, "defineNamedParameters")

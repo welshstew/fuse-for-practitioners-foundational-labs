@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cxf="http://camel.apache.org/schema/cxf"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/cxf
+       http://camel.apache.org/schema/cxf/camel-cxf-spring.xsd
        http://camel.apache.org/schema/spring
        http://camel.apache.org/schema/spring/camel-spring.xsd">
 
@@ -17,25 +20,36 @@
 
     <!-- SQL Component -->
     <bean id="sql" class="org.apache.camel.component.sql.SqlComponent">
+        <property name="dataSource" ref="usecaseDB" />
     </bean>
 
     <!-- Spring JMS TxManager -->
     <bean id="jmsTransactionManager" class="org.springframework.jms.connection.JmsTransactionManager">
+        <property name="connectionFactory" ref="jmsConnectionFactory" />
     </bean>
 
     <!-- JMS ConnectionFactory  -->
     <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616" />
+        <property name="userName" value="admin"/>
+        <property name="password" value="admin" />
     </bean>
 
     <!-- ActiveMQ Camel Component - Tx -->
-    <bean id="amq-tx" class="org.apache.activemq.camel.component.ActiveMQComponent">
-    </bean>
+    <!--<bean id="amq-tx" class="org.apache.activemq.camel.component.ActiveMQComponent">-->
+
+    <!--</bean>-->
 
     <!-- ActiveMQ Camel Component - No Tx -->
     <bean id="amq-notx" class="org.apache.activemq.camel.component.ActiveMQComponent">
+        <property name="connectionFactory" ref="jmsConnectionFactory" />
     </bean>
 
-    <camelContext trace="false" xmlns="http://camel.apache.org/schema/spring">
+    <bean id="routeBuilder" class="org.fuse.usecase.routebuilder.UseCase3RouteBuilder" />
+
+    <camelContext id="camel" trace="false" xmlns="http://camel.apache.org/schema/spring">
         <propertyPlaceholder id="properties" location="fabric8/route.properties"/>
+        <routeBuilder ref="routeBuilder" />
+        <endpoint uri="direct:error-queue" id="direct-error-queue" camelContextId="camel" />
     </camelContext>
 </beans>

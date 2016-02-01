@@ -70,7 +70,7 @@ public class OnExceptionDLQWithTxSpringRoutesTest extends CamelSpringTestSupport
     public void shouldGetMessageWithinDLQ() throws Exception {
 
         // We will extend the route of the error queue to add a mock endpoint
-        context.getRouteDefinition("direct-error-queue").adviceWith(context, new AdviceWithRouteBuilder() {
+            context.getRouteDefinition("direct-error-queue").adviceWith(context, new AdviceWithRouteBuilder() {
             @Override public void configure() throws Exception {
                 weaveById("error-queue-endpoint").replace().to("mock:error");
             }
